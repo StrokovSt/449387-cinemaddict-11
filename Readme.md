@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Иван Строков](https://up.htmlacademy.ru/ecmascript/11/user/449387).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Быков](https://up.htmlacademy.ru/ecmascript/11/user/7107).
 
 ---
 
