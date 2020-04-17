@@ -267,9 +267,9 @@ const createFilmDetailPopupTemplate = () => {
   `);
 };
 
-const siteHeaderElement = document.querySelector('.header');
-const siteMainElement = document.querySelector('.main');
-const siteFooterElement = document.querySelector('.footer');
+const siteHeaderElement = document.querySelector(`.header`);
+const siteMainElement = document.querySelector(`.main`);
+const siteFooterElement = document.querySelector(`.footer`);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -281,9 +281,9 @@ render(siteMainElement, createSortTemplate(), `beforeend`);
 render(siteMainElement, createFilmsSectionTemplate(), `beforeend`);
 render(siteFooterElement, createFooterStatiscticTemplate(), `beforeend`);
 
-const siteFilmsList = document.querySelector('.films-list');
-const siteFilmsListContainer = document.querySelector('.films-list__container');
-const siteExtraFilmsArray = document.querySelectorAll('.films-list--extra');
+const siteFilmsList = document.querySelector(`.films-list`);
+const siteFilmsListContainer = document.querySelector(`.films-list__container`);
+const siteExtraFilmsArray = document.querySelectorAll(`.films-list--extra`);
 
 for (let i = 0; i < FILMS_COUNT; i++) {
   render(siteFilmsListContainer, createFilmCardTemplate(), `beforeend`);
@@ -293,8 +293,8 @@ render(siteFilmsList, createShomMoreButton(), `beforeend`);
 
 for (let i = 0; i < siteExtraFilmsArray.length; i++) {
   for (let j = 0; j < EXTRA_FILMS_COUNT; j++) {
-    render(siteExtraFilmsArray[i].querySelector('.films-list__container'), createFilmCardTemplate(), `beforeend`);
+    render(siteExtraFilmsArray[i].querySelector(`.films-list__container`), createFilmCardTemplate(), `beforeend`);
   }
 }
 
-//render(siteFooterElement, createFilmDetailPopupTemplate(), `beforeend`);
+render(siteFooterElement, createFilmDetailPopupTemplate(), `beforeend`);
