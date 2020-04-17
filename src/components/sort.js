@@ -1,11 +1,19 @@
-const createSortTemplate = () => {
+const createSortOption = (sortValue, isActive) => {
+  const {name} = sortValue;
+  return (`
+    <li>
+      <a href="#" class="sort__button ${isActive ? `sort__button--active` : ``}">${name}</a>
+    </li>
+  `);
+};
+
+const createSort = (options) => {
+  const sortOptions = options.map((it, i) => createSortOption(it, i === 0)).join(`\n`);
   return (`
     <ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" class="sort__button">Sort by date</a></li>
-      <li><a href="#" class="sort__button">Sort by rating</a></li>
+      ${sortOptions}
     </ul>
   `);
 };
 
-export {createSortTemplate};
+export {createSort};
