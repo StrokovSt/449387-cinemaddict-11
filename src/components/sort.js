@@ -2,20 +2,20 @@ import {createElement} from "../utils.js";
 
 const createSortOption = (sortValue, isActive) => {
   const {name} = sortValue;
-  return (`
-    <li>
+  return (
+    `<li>
       <a href="#" class="sort__button ${isActive ? `sort__button--active` : ``}">${name}</a>
-    </li>
-  `);
+    </li>`
+  );
 };
 
 const createSort = (options) => {
   const sortOptions = options.map((it, i) => createSortOption(it, i === 0)).join(`\n`);
-  return (`
-    <ul class="sort">
+  return (
+    `<ul class="sort">
       ${sortOptions}
-    </ul>
-  `);
+    </ul>`
+  );
 };
 
 export default class Sort {

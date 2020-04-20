@@ -1,21 +1,21 @@
 import {createElement} from "../utils.js";
 
-const createProfileTemplate = () => {
+const createFilmsListSectionTemplate = () => {
   return (
-    `<section class="header__profile profile">
-      <p class="profile__rating">Movie Buff</p>
-      <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    </section>`
+    `<section class="films-list">
+       <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+       <div class="films-list__container"></div>
+     </section>`
   );
 };
 
-export default class Profile {
+export default class FailFilmSection {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createProfileTemplate();
+    return createFilmsListSectionTemplate();
   }
 
   getElement() {
