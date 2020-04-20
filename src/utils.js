@@ -38,4 +38,14 @@ const getRandomMixedArray = (array, number) => {
   return mixedArray;
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, getRandomNumbersArray, getRandomMixedArray};
+//  --------------------  Функция по созданию DOM элемента
+
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
+export {getRandomIntegerNumber, getRandomArrayItem, getRandomNumbersArray, getRandomMixedArray, createElement};
+

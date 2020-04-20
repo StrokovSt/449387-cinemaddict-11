@@ -89,7 +89,8 @@ showMoreButton.addEventListener(`click`, () => {
 //  --------------------  Заполнение дополнительных секций «Top rated» и «Most commented»
 
 const mostRatingFilms = films.slice().sort((a, b) => b.rating - a.rating);
-const mostCommentedFilms = films.slice().sort((a, b) => b.comments - a.comments);
+const mostCommentedFilms = films.slice().sort((a, b) => b.commentsNumber - a.commentsNumber);
+
 
 for (let i = 0; i < siteExtraFilmsArray.length; i++) {
   for (let j = 0; j < EXTRA_FILMS_COUNT; j++) {
