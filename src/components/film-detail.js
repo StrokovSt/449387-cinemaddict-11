@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const createComment = (comment) => {
   const {text, autor, date, emoji, img} = comment;
   return (`
@@ -33,14 +35,14 @@ const generateGenrys = (genry) => {
   return genrysMarkup;
 };
 
-const createFilmDetailPopup = (film) => {
+const createFilmDetailTemplate = (film) => {
   const {title, rating, year, mounth, duration, genry, img, description, pg, director, writers, actors, country, comments} = film;
 
   const detailedComments = generateComments(comments);
   const manyGenres = generateGenrys(genry);
 
-  return (`
-  <section class="film-details">
+  return (
+  `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
         <div class="film-details__close">
@@ -139,8 +141,29 @@ const createFilmDetailPopup = (film) => {
         </section>
       </div>
     </form>
-  </section>
-  `);
+  </section>`
+  );
 };
 
-export {createFilmDetailPopup};
+export default class FilmDetail {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

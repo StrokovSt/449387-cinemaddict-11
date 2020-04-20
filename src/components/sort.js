@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const createSortOption = (sortValue, isActive) => {
   const {name} = sortValue;
   return (`
@@ -16,4 +18,25 @@ const createSort = (options) => {
   `);
 };
 
-export {createSort};
+export default class Sort {
+  constructor(sorts) {
+    this._sorts = sorts;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSort(this._sorts);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
