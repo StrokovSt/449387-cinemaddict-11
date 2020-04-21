@@ -69,9 +69,11 @@ const siteFilmsListContainer = document.querySelector(`.films-list__container`);
 //  -------------------- Рендер карточки фильма
 
 const renderFilmCard = (filmSectionElement, film) => {
-  const onFilmCardClick = () => {
-    render(siteBodyElement, filmDetailCard.getElement(), RenderPosition.BEFOREEND);
-    document.addEventListener(`keydown`, onEscKeyDown);
+  const onFilmCardClick = (evt) => {
+    if (evt.target.classList.contains(`film-card__title`) || evt.target.classList.contains(`film-card__poster`) || evt.target.classList.contains(`film-card__comments`)) {
+      render(siteBodyElement, filmDetailCard.getElement(), RenderPosition.BEFOREEND);
+      document.addEventListener(`keydown`, onEscKeyDown);
+    }
   };
 
   const onFilmDetailCloseButtonClick = () => {
@@ -89,13 +91,11 @@ const renderFilmCard = (filmSectionElement, film) => {
   };
 
   const filmCard = new FilmCardComponent(film);
-  const filmImg = filmCard.getElement().querySelector(`.film-card__poster`);
-
   const filmDetailCard = new FilmDetailCardComponent(film);
-  const filmDetailCloceButton = filmDetailCard.getElement().querySelector(`.film-details__close-btn`);
+  const filmDetailCloseButton = filmDetailCard.getElement().querySelector(`.film-details__close-btn`);
 
-  filmImg.addEventListener(`click`, onFilmCardClick);
-  filmDetailCloceButton.addEventListener(`click`, onFilmDetailCloseButtonClick);
+  filmCard.getElement().addEventListener(`click`, onFilmCardClick);
+  filmDetailCloseButton.addEventListener(`click`, onFilmDetailCloseButtonClick);
 
   render(filmSectionElement, filmCard.getElement(), RenderPosition.BEFOREEND);
 };
