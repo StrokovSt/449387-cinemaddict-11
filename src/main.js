@@ -4,7 +4,6 @@ import SortComponent from "./components/sort.js";
 import FilmsSectionComponent from "./components/films-section.js";
 import FilmsListSectionComponent from "./components/films-list-section.js";
 import FilmsExtraSectionComponent from "./components/films-extra-section.js";
-import FilmsFailSectionComponent from "./components/films-fail-section.js";
 import FilmCardComponent from "./components/film-card.js";
 import FilmDetailCardComponent from "./components/film-detail.js";
 import ShomMoreButtonComponent from "./components/show-more-button.js";
@@ -51,6 +50,7 @@ const sortOptions = generateSortOptions();
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
+const siteBodyElement = document.querySelector(`body`);
 
 //  ---------------------------------------- Заполнение страницы контентом
 
@@ -61,66 +61,82 @@ render(siteMainElement, new FilmsSectionComponent().getElement(), RenderPosition
 
 const siteFilms = document.querySelector(`.films`);
 
-//  -------------------- Рендер карточки фильма
-
-const renderMainFilmsList = (filmSectionElement, film) => {
-  const onFilmClick = () => {
-    filmSectionElement.replaceChild(filmDetailCard.getElement(), filmCard.getElement());
-  };
-
-
-  const filmCard = new FilmCardComponent(film);
-
-  const filmDetailCard = new FilmDetailCardComponent(task);
-};
-
 render(siteFilms, new FilmsListSectionComponent().getElement(), RenderPosition.BEFOREEND);
 
 const siteFilmsList = document.querySelector(`.films-list`);
 const siteFilmsListContainer = document.querySelector(`.films-list__container`);
 
+//  -------------------- Рендер карточки фильма
 
-//let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
-//
-//for (let i = 0; i < showingFilmsCount; i++) {
-//  render(siteFilmsListContainer, createFilmCardTemplate(films[i]), `beforeend`);
-//}
-//
-//render(siteFilmsList, createShomMoreButton(), `beforeend`);
-//const showMoreButton = siteFilmsList.querySelector(`.films-list__show-more`);
-//
-//showMoreButton.addEventListener(`click`, () => {
-//  const prevFilmsCount = showingFilmsCount;
-//  showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
-//
-//  films.slice(prevFilmsCount, showingFilmsCount)
-//    .forEach((film) => render(siteFilmsListContainer, createFilmCardTemplate(film), `beforeend`));
-//
-//  if (showingFilmsCount >= films.length) {
-//    showMoreButton.remove();
-//  }
-//});
+const renderFilmCard = (filmSectionElement, film) => {
+  const onFilmCardClick = () => {
+    render(siteBodyElement, filmDetailCard.getElement(), RenderPosition.BEFOREEND);
+  };
+
+  const onFilmDetailCloseButtonClick = () => {
+    filmDetailCard.getElement().remove();
+  };
+
+  const filmCard = new FilmCardComponent(film);
+  const filmImg = filmCard.getElement().querySelector(`.film-card__poster`);
+
+  const filmDetailCard = new FilmDetailCardComponent(film);
+  const filmDetailCloceButton = filmDetailCard.getElement().querySelector(`.film-details__close-btn`);
+
+  filmImg.addEventListener(`click`, onFilmCardClick);
+  filmDetailCloceButton.addEventListener(`click`, onFilmDetailCloseButtonClick);
+
+  render(filmSectionElement, filmCard.getElement(), RenderPosition.BEFOREEND);
+};
+
+//  -------------------- Рендер карточек в основной список фильмов
+
+const renderFilmsList = (filmSectionElement, filmsList) => {
+  let showingFilmsCount = SHOWING_FILMS_COUNT_ON_START;
+
+  filmsList.slice(0, showingFilmsCount).forEach((film) => {
+    renderFilmCard(filmSectionElement, film);
+  });
+
+  const showMoreButton = new ShomMoreButtonComponent();
+  render(siteFilmsList, showMoreButton.getElement(), RenderPosition.BEFOREEND);
+
+  showMoreButton.getElement().addEventListener(`click`, () => {
+    const prevFilmsCount = showingFilmsCount;
+    showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
+
+    filmsList.slice(prevFilmsCount, showingFilmsCount).forEach((film) => {
+      renderFilmCard(filmSectionElement, film);
+    });
+
+    if (showingFilmsCount >= filmsList.length) {
+      showMoreButton.getElement().remove();
+      showMoreButton.removeElement();
+    }
+  });
+};
+
+renderFilmsList(siteFilmsListContainer, films);
 
 //  --------------------  Заполнение дополнительных секций «Top rated» и «Most commented»
 
-//const siteExtraFilmsArray = document.querySelectorAll(`.films-list--extra`);
-//const mostRatingFilms = films.slice().sort((a, b) => b.rating - a.rating);
-//const mostCommentedFilms = films.slice().sort((a, b) => b.commentsNumber - a.commentsNumber);
+const mostRatingFilms = films.slice().sort((a, b) => b.rating - a.rating);
+const mostCommentedFilms = films.slice().sort((a, b) => b.commentsNumber - a.commentsNumber);
 
+const renderExtraFilmsList = (filmsList, name) => {
+  const filmExtraSection = new FilmsExtraSectionComponent(name);
+  render(siteFilms, filmExtraSection.getElement(), RenderPosition.BEFOREEND);
+  const siteExtraFilmsContainer = filmExtraSection.getElement().querySelector(`.films-list__container`);
 
-//for (let i = 0; i < siteExtraFilmsArray.length; i++) {
-//  for (let j = 0; j < EXTRA_FILMS_COUNT; j++) {
-//    const film = i === 0 ? mostRatingFilms[j] : mostCommentedFilms[j];
-//    render(siteExtraFilmsArray[i].querySelector(`.films-list__container`), createFilmCardTemplate(film), `beforeend`);
-//  }
-//}
+  filmsList.slice(0, EXTRA_FILMS_COUNT).forEach((film) => {
+    renderFilmCard(siteExtraFilmsContainer, film);
+  });
+};
 
-//  --------------------  Добавление попапа
+renderExtraFilmsList(mostRatingFilms, `Top rated`);
+renderExtraFilmsList(mostCommentedFilms, `Most commented`);
 
-//render(siteFooterElement, createFilmDetailPopup(films[0]), `afterend`);
-//const filmdDetailsPopup = document.querySelector(`.film-details`);
-//const filmdDetailCloseButton = filmdDetailsPopup.querySelector(`.film-details__close-btn`);
-//
-//filmdDetailCloseButton.addEventListener(`click`, () => {
-//  filmdDetailsPopup.remove();
-//});
+//  --------------------  Добавление количества фильмов
+
+const footerStatistic = new FooterStatiscticComponent(FILMS_COUNT);
+render(siteFooterElement, footerStatistic.getElement(), RenderPosition.BEFOREEND);

@@ -1,21 +1,22 @@
 import {createElement} from "../utils.js";
 
-const createFooterStatiscticTemplate = () => {
-  return (`
-  <section class="footer__statistics">
-    <p>130 291 movies inside</p>
-  </section>
-  `);
+const createFooterStatiscticTemplate = (count) => {
+  return (
+    `<section class="footer__statistics">
+    <p>${count} movies inside</p>
+  </section>`
+  );
 };
 
 
 export default class FooterStatistic {
-  constructor() {
+  constructor(count) {
+    this._count = count;
     this._element = null;
   }
 
   getTemplate() {
-    return createFooterStatiscticTemplate();
+    return createFooterStatiscticTemplate(this._count);
   }
 
   getElement() {
