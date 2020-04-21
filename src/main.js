@@ -19,6 +19,11 @@ const EXTRA_FILMS_COUNT = 2;
 const SHOWING_FILMS_COUNT_ON_START = 5;
 const SHOWING_FILMS_COUNT_BY_BUTTON = 5;
 
+const siteHeaderElement = document.querySelector(`.header`);
+const siteMainElement = document.querySelector(`.main`);
+const siteFooterElement = document.querySelector(`.footer`);
+const siteBodyElement = document.querySelector(`body`);
+
 const films = generateFilms(FILMS_COUNT);
 
 //  --------------------  Подсчет фильмов с категориями "watchlist", "history", "favorites"
@@ -46,25 +51,6 @@ const filterNumbers = findOutTheFilterNumbers(films);
 
 const filterOptions = generateFilterOptions(filterNumbers);
 const sortOptions = generateSortOptions();
-
-const siteHeaderElement = document.querySelector(`.header`);
-const siteMainElement = document.querySelector(`.main`);
-const siteFooterElement = document.querySelector(`.footer`);
-const siteBodyElement = document.querySelector(`body`);
-
-//  ---------------------------------------- Заполнение страницы контентом
-
-render(siteHeaderElement, new ProfileComponent().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilterComponent(filterOptions).getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new SortComponent(sortOptions).getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilmsSectionComponent().getElement(), RenderPosition.BEFOREEND);
-
-const siteFilms = document.querySelector(`.films`);
-
-render(siteFilms, new FilmsListSectionComponent().getElement(), RenderPosition.BEFOREEND);
-
-const siteFilmsList = document.querySelector(`.films-list`);
-const siteFilmsListContainer = document.querySelector(`.films-list__container`);
 
 //  -------------------- Рендер карточки фильма
 
@@ -127,16 +113,14 @@ const renderFilmsList = (filmSectionElement, filmsList) => {
   });
 };
 
-renderFilmsList(siteFilmsListContainer, films);
-
 //  --------------------  Заполнение дополнительных секций «Top rated» и «Most commented»
 
 const mostRatingFilms = films.slice().sort((a, b) => b.rating - a.rating);
 const mostCommentedFilms = films.slice().sort((a, b) => b.commentsNumber - a.commentsNumber);
 
-const renderExtraFilmsList = (filmsList, name) => {
+const renderExtraFilmsList = (filmSectionElement, filmsList, name) => {
   const filmExtraSection = new FilmsExtraSectionComponent(name);
-  render(siteFilms, filmExtraSection.getElement(), RenderPosition.BEFOREEND);
+  render(filmSectionElement, filmExtraSection.getElement(), RenderPosition.BEFOREEND);
   const siteExtraFilmsContainer = filmExtraSection.getElement().querySelector(`.films-list__container`);
 
   filmsList.slice(0, EXTRA_FILMS_COUNT).forEach((film) => {
@@ -144,10 +128,19 @@ const renderExtraFilmsList = (filmsList, name) => {
   });
 };
 
-renderExtraFilmsList(mostRatingFilms, `Top rated`);
-renderExtraFilmsList(mostCommentedFilms, `Most commented`);
+//  ---------------------------------------- Заполнение страницы контентом
 
-//  --------------------  Добавление количества фильмов
+render(siteHeaderElement, new ProfileComponent().getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilterComponent(filterOptions).getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new SortComponent(sortOptions).getElement(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilmsSectionComponent().getElement(), RenderPosition.BEFOREEND);
+render(siteFooterElement, new FooterStatiscticComponent(FILMS_COUNT).getElement(), RenderPosition.BEFOREEND);
 
-const footerStatistic = new FooterStatiscticComponent(FILMS_COUNT);
-render(siteFooterElement, footerStatistic.getElement(), RenderPosition.BEFOREEND);
+const siteFilms = document.querySelector(`.films`);
+
+render(siteFilms, new FilmsListSectionComponent().getElement(), RenderPosition.BEFOREEND);
+const siteFilmsList = document.querySelector(`.films-list`);
+const siteFilmsListContainer = document.querySelector(`.films-list__container`);
+renderFilmsList(siteFilmsListContainer, films);
+renderExtraFilmsList(siteFilms, mostRatingFilms, `Top rated`);
+renderExtraFilmsList(siteFilms, mostCommentedFilms, `Most commented`);
