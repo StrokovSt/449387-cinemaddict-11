@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber, getRandomArrayItem, getRandomMixedArray} from "../utils.js";
+import {getRandomIntegerNumber, getRandomArrayItem, getRandomMixedArray} from "../utils/auxiliary-functions.js";
 import {filmNames, filmGenres, filmDescriptions, ratingList, filmDirectors, filmWriters, filmActors, monthNames, countryNames} from "../const.js";
 import {generateComments} from "./mock-comment.js";
 

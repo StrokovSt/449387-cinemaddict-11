@@ -1,5 +1,5 @@
 const optionNames = [
-  `Sort by default`, `Sort by date`, `Sort by rating`, `Sort by meow`
+  `Sort by default`, `Sort by date`, `Sort by rating`
 ];
 
 const generateSortOptions = () => {
