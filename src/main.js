@@ -12,7 +12,7 @@ import FooterStatiscticComponent from "./components/footer-statistic.js";
 import {generateFilterOptions} from "./mock/mock-filter.js";
 import {generateSortOptions} from "./mock/mock-sort.js";
 import {generateFilms} from "./mock/mock-film.js";
-import {RenderPosition, render, remove, replace} from "./utils/render.js";
+import {RenderPosition, render, remove} from "./utils/render.js";
 
 const FILMS_COUNT = 15;
 const EXTRA_FILMS_COUNT = 2;
@@ -56,9 +56,14 @@ const sortOptions = generateSortOptions();
 
 const renderFilmCard = (filmSectionElement, film) => {
   const onFilmCardClick = (evt) => {
-    if (evt.target.classList.contains(`film-card__title`) || evt.target.classList.contains(`film-card__poster`) || evt.target.classList.contains(`film-card__comments`)) {
+    if (evt.target.classList.contains(`film-card__title`) || evt.target.classList.contains(`film-card__poster`)
+    || evt.target.classList.contains(`film-card__comments`)) {
       render(siteBodyElement, filmDetailCard, RenderPosition.BEFOREEND);
       document.addEventListener(`keydown`, onEscKeyDown);
+
+      filmDetailCard.setCloseButtonHandler(() => {
+        onFilmDetailCloseButtonClick();
+      });
     }
   };
 
@@ -78,10 +83,10 @@ const renderFilmCard = (filmSectionElement, film) => {
 
   const filmCard = new FilmCardComponent(film);
   const filmDetailCard = new FilmDetailCardComponent(film);
-  const filmDetailCloseButton = filmDetailCard.getElement().querySelector(`.film-details__close-btn`);
 
-  filmCard.getElement().addEventListener(`click`, onFilmCardClick);
-  filmDetailCloseButton.addEventListener(`click`, onFilmDetailCloseButtonClick);
+  filmCard.setFilmClickHandler((evt) => {
+    onFilmCardClick(evt);
+  });
 
   render(filmSectionElement, filmCard, RenderPosition.BEFOREEND);
 };
@@ -96,9 +101,7 @@ const renderFilmsList = (filmSectionElement, filmsList) => {
   });
 
   const showMoreButton = new ShomMoreButtonComponent();
-  render(siteFilmsList, showMoreButton, RenderPosition.BEFOREEND);
-
-  showMoreButton.getElement().addEventListener(`click`, () => {
+  showMoreButton.setClickHandler(() => {
     const prevFilmsCount = showingFilmsCount;
     showingFilmsCount = showingFilmsCount + SHOWING_FILMS_COUNT_BY_BUTTON;
 
@@ -110,6 +113,8 @@ const renderFilmsList = (filmSectionElement, filmsList) => {
       remove(showMoreButton);
     }
   });
+
+  render(siteFilmsList, showMoreButton, RenderPosition.BEFOREEND);
 };
 
 //  --------------------  Заполнение дополнительных секций «Top rated» и «Most commented»
