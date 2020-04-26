@@ -12,7 +12,7 @@ import FooterStatiscticComponent from "./components/footer-statistic.js";
 import {generateFilterOptions} from "./mock/mock-filter.js";
 import {generateSortOptions} from "./mock/mock-sort.js";
 import {generateFilms} from "./mock/mock-film.js";
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 const FILMS_COUNT = 15;
 const EXTRA_FILMS_COUNT = 2;
