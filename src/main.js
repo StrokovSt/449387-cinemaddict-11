@@ -1,13 +1,7 @@
 import ProfileComponent from "./components/profile.js";
-import FilterComponent from "./components/filter.js";
-import SortComponent from "./components/sort.js";
-import FilmsSectionComponent from "./components/films-section.js";
 import FooterStatiscticComponent from "./components/footer-statistic.js";
 
-import {generateFilterOptions} from "./mock/mock-filter.js";
-import {generateSortOptions} from "./mock/mock-sort.js";
 import {generateFilms} from "./mock/mock-film.js";
-
 import {RenderPosition, render} from "./utils/render.js";
 
 import FilmsSectionListController from "./controllers/film-section-controller.js";
@@ -21,44 +15,15 @@ const siteFooterElement = document.querySelector(`.footer`);
 
 const films = generateFilms(FILMS_COUNT);
 
-//  --------------------  Подсчет фильмов с категориями "watchlist", "history", "favorites"
-
-const findOutTheFilterNumbers = (array) => {
-  let watchNumber = 0;
-  let historyNumber = 0;
-  let favoritesNumber = 0;
-  for (let i = 0; i < array.length; i++) {
-    if (array[i].watchlist) {
-      watchNumber++;
-    }
-    if (array[i].history) {
-      historyNumber++;
-    }
-    if (array[i].favorites) {
-      favoritesNumber++;
-    }
-  }
-  const filterNumbers = [watchNumber, historyNumber, favoritesNumber];
-  return filterNumbers;
-};
-
-const filterNumbers = findOutTheFilterNumbers(films);
-
-const filterOptions = generateFilterOptions(filterNumbers);
-const sortOptions = generateSortOptions();
-
 //  ---------------------------------------- Заполнение страницы контентом
 
 render(siteHeaderElement, new ProfileComponent(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilterComponent(filterOptions), RenderPosition.BEFOREEND);
-render(siteMainElement, new SortComponent(sortOptions), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilmsSectionComponent(), RenderPosition.BEFOREEND);
 render(siteFooterElement, new FooterStatiscticComponent(FILMS_COUNT), RenderPosition.BEFOREEND);
-
-const siteFilms = document.querySelector(`.films`);
 
 const filmsListController = new FilmsSectionListController(siteMainElement);
 filmsListController.render(films);
+
+const siteFilms = document.querySelector(`.films`);
 
 if (films.length !== 0) {
   const mostRatingFilms = films.slice().sort((a, b) => b.rating - a.rating);
