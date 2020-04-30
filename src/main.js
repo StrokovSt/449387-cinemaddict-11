@@ -7,7 +7,7 @@ import {RenderPosition, render} from "./utils/render.js";
 import FilmsSectionListController from "./controllers/film-section-controller.js";
 import FilmsExtraSectionListController from "./controllers/film-extra-section-controller.js";
 
-const FILMS_COUNT = 15;
+const FILMS_COUNT = 25;
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
