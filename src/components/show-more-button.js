@@ -10,4 +10,8 @@ export default class ShomMoreButton extends AbstractComponent {
   getTemplate() {
     return createShomMoreButton();
   }
+
+  setClickHandler(handler) {
+    this.getElement().addEventListener(`click`, handler);
+  }
 }

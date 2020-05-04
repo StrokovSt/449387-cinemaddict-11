@@ -8,7 +8,7 @@ const createFailFilmSectionTemplate = () => {
   );
 };
 
-export default class FailFilmSection extends AbstractComponent {
+export default class FailFilmSectionComponent extends AbstractComponent {
   getTemplate() {
     return createFailFilmSectionTemplate();
   }

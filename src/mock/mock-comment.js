@@ -1,4 +1,4 @@
-import {getRandomArrayItem} from "../utils.js";
+import {getRandomArrayItem} from "../utils/auxiliary-functions.js";
 import {filmComments, userList, commentTime, commentEmoji} from "../const.js";
 
 const generateComment = () => {
