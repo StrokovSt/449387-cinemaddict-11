@@ -89,7 +89,7 @@ export default class FilmsSectionListController {
     this.films = films;
   }
 
-  addHandlers() {
+  addHandlers(films) {
     this._showMoreButtonComponent.setClickHandler(() => {
       const prevFilmsCount = this._showingFilmsCount;
       this._showingFilmsCount += DEFAULT_FILMS_COUNT;
@@ -103,7 +103,7 @@ export default class FilmsSectionListController {
 
     this.sortComponent.setSortTypeChangeHandler((sortType) => {
       this._showingFilmsCount = DEFAULT_FILMS_COUNT;
-      this.films = getSortedFilms(this.films, sortType);
+      this.films = getSortedFilms(films, sortType);
 
       this._filmListContainer.innerHTML = ``;
 
@@ -128,7 +128,7 @@ export default class FilmsSectionListController {
 
     render(filmsSection, this._mainFilmSection, RenderPosition.BEFOREEND);
     this.init(films);
-    this.addHandlers();
+    this.addHandlers(films);
 
     this.renderCards(films, 0);
     this.renderShowMoreButton(films, this._mainFilmsSection);
