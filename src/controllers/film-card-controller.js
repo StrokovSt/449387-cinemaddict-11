@@ -41,6 +41,10 @@ const renderFilmCard = (filmSectionElement, film) => {
     onFilmCardClick(evt);
   });
 
+  filmCard.setWatchlistButtonClickHandler((evt) => {
+    evt.preventDefault();
+  });
+
   render(filmSectionElement, filmCard, RenderPosition.BEFOREEND);
 };
 
