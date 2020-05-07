@@ -1,7 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
-const createFilterOption = (mockFilter) => {
-  const {name, count} = mockFilter;
+const createFilterOption = (name, count) => {
   return (
     `<a href="#${name}" class="main-navigation__item">
       ${name}
@@ -12,13 +11,14 @@ const createFilterOption = (mockFilter) => {
   );
 };
 
-const createFilterTemplate = (filters) => {
-  const filtersOptions = filters.map((it) => createFilterOption(it)).join(`\n`);
+const createFilterTemplate = (watchlistCount, historyCount, favoritesCount) => {
   return (
     `<nav class="main-navigation">
       <div class="main-navigation__items">
         <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-        ${filtersOptions}
+        ${createFilterOption(`Watchlist`, watchlistCount)}
+        ${createFilterOption(`History`, historyCount)}
+        ${createFilterOption(`Favorites`, favoritesCount)}
       </div>
       <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`
@@ -26,12 +26,14 @@ const createFilterTemplate = (filters) => {
 };
 
 export default class Filter extends AbstractComponent {
-  constructor(filters) {
+  constructor(watchlistCount, historyCount, favoritesCount) {
     super();
-    this._filters = filters;
+    this._watchlistCount = watchlistCount;
+    this._historyCount = historyCount;
+    this._favoritesCount = favoritesCount;
   }
 
   getTemplate() {
-    return createFilterTemplate(this._filters);
+    return createFilterTemplate(this._watchlistCount, this._historyCount, this._favoritesCount);
   }
 }

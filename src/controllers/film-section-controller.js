@@ -5,10 +5,11 @@ import FilmsSectionComponent from "../components/films-section.js";
 import MainFilmSectionComponent from "../components/films-list-section.js";
 import FailFilmSectionComponent from "../components/films-fail-section.js";
 import ShomMoreButtonComponent from "../components/show-more-button.js";
+
 import FilmCardController from "../controllers/film-card-controller.js";
+import FilterController from "../controllers/filter-controller.js";
 
 import {generateSortOptions} from "../mock/mock-sort.js";
-import {generateFilterOptions} from "../mock/mock-filter.js";
 
 import {RenderPosition, render, remove} from "../utils/render.js";
 
@@ -53,9 +54,9 @@ const getSortedFilms = (films, sortType, from, to) => {
   return sortedFilms.slice(from, to);
 };
 
-const renderFilms = (filmListContainer, films) => {
+const renderFilms = (filmListContainer, films, ondataChange) => {
   return films.map((film) => {
-    const filmController = new FilmCardController(filmListContainer);
+    const filmController = new FilmCardController(filmListContainer, ondataChange);
     filmController.render(film);
 
     return filmController;
@@ -77,8 +78,22 @@ export default class FilmsSectionListController {
     this.films = [];
     this._showedFilmsControllers = [];
 
+    this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+  }
+
+  _onDataChange(filmController, oldData, newData) {
+    const index = this.films.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this.films = [].concat(this.films.slice(0, index), newData, this.films.slice(index + 1));
+
+    filmController.render(this.films[index]);
   }
 
   _renderShowMoreButton() {
@@ -93,7 +108,7 @@ export default class FilmsSectionListController {
       this._showingFilmsCount += DEFAULT_FILMS_COUNT;
 
       const sortedFilms = getSortedFilms(this.films, this._sortComponent.getSortType(), prevFilmsCount, this._showingFilmsCount);
-      const newFilms = renderFilms(this._filmListContainer, sortedFilms);
+      const newFilms = renderFilms(this._filmListContainer, sortedFilms, this._onDataChange);
 
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
 
@@ -109,7 +124,7 @@ export default class FilmsSectionListController {
 
     this._filmListContainer.innerHTML = ``;
 
-    const newFilms = renderFilms(this._filmListContainer, sortedFilms);
+    const newFilms = renderFilms(this._filmListContainer, sortedFilms, this._onDataChange);
     this._showedFilmsControllers = newFilms;
 
     this._renderShowMoreButton();
@@ -118,10 +133,10 @@ export default class FilmsSectionListController {
   render(films) {
     this.films = films;
 
+    const filterController = new FilterController(mainElement);
     const filterNumbers = findOutTheFilterNumbers(films);
-    const filterOptions = generateFilterOptions(filterNumbers);
+    filterController.render(filterNumbers[0], filterNumbers[1], filterNumbers[2]);
 
-    render(mainElement, new FilterComponent(filterOptions), RenderPosition.BEFOREEND);
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container, this._filmsSection, RenderPosition.BEFOREEND);
     const filmsSection = document.querySelector(`.films`);
@@ -136,7 +151,7 @@ export default class FilmsSectionListController {
     this._filmCardController = new FilmCardController(this._filmListContainer);
     this._mainFilmsSection = document.querySelector(`.films-list`);
 
-    const newFilms = renderFilms(this._filmListContainer, films.slice(0, this._showingFilmsCount));
+    const newFilms = renderFilms(this._filmListContainer, films.slice(0, this._showingFilmsCount), this._onDataChange);
     this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
     this._renderShowMoreButton();
   }
