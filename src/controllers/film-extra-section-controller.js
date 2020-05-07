@@ -21,9 +21,11 @@ const renderExtraFilmsList = (filmSectionElement, films, name) => {
 export default class FilmsExtraSectionListController {
   constructor(container) {
     this._container = container;
+    this.films = [];
   }
 
   render(films, name) {
-    renderExtraFilmsList(this._container, films, name);
+    this.films = films;
+    renderExtraFilmsList(this._container, this.films, name);
   }
 }

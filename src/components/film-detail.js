@@ -158,4 +158,16 @@ export default class FilmDetail extends AbstractComponent {
   setCloseButtonHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
+
+  // setWatchlistButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__controls-label--add-to-watchlist`).addEventListener(`click`, handler);
+  // }
+  //
+  // setHistorytButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__controls-label--mark-as-watched`).addEventListener(`click`, handler);
+  // }
+  //
+  // setFavoritesButtonClickHandler(handler) {
+  //   this.getElement().querySelector(`.film-details__controls-label--favorite`).addEventListener(`click`, handler);
+  // }
 }

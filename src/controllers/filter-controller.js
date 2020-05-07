@@ -3,8 +3,9 @@ import FilterComponent from "../components/filter.js";
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
 export default class FilterController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
 
     this._filterComponent = null;
   }

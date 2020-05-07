@@ -30,6 +30,20 @@ export default class FilmCardController {
       }));
     });
 
+    this._filmCard.setHistorytButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        history: !film.history
+      }));
+    });
+
+    this._filmCard.setFavoritesButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        favorites: !film.favorites
+      }));
+    });
+
     this._filmCard.setFilmClickHandler((evt) => {
       if (evt.target.classList.contains(`film-card__title`) || evt.target.classList.contains(`film-card__poster`)
       || evt.target.classList.contains(`film-card__comments`)) {
