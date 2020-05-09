@@ -20,14 +20,17 @@ export default class FilmCardController {
     this._film = film;
 
     const oldFilmCardComponent = this._filmCardComponent;
-
     this._filmCardComponent = new FilmCardComponent(film);
+
+    //  Если уже существует карточка фильма - перерисовать её
 
     if (oldFilmCardComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);
     } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
     }
+
+    //  Обработчики на карточку фильма
 
     this._filmCardComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
@@ -50,28 +53,42 @@ export default class FilmCardController {
       }));
     });
 
-    this._filmCardComponent.setFilmClickHandler((evt) => {
+    this._filmCardComponent.setFilmClickHandler(() => {
       this._renderFilmPopup();
     });
   }
 
+  //  Рендер попапа  (подробной карточки фильма)
+
   _renderFilmPopup() {
-    this._onViewChange();
+    this._onViewChange(); // удалит другие попапы, если они есть
     const siteBodyElement = document.querySelector(`body`);
 
     this._filmPopupComponent = new FilmDetailCardComponent(this._film);
     render(siteBodyElement, this._filmPopupComponent, RenderPosition.BEFOREEND);
+
+    //  Обработчики на попап
 
     this._filmPopupComponent.setCloseButtonHandler(() => {
       this._onFilmDetailCloseButtonClick();
     });
 
     this._filmPopupComponent.setWatchlistButtonClickHandler(() => {
-      console.log(`было ` + this._film.watchlist);
       this._onDataChange(this._film, Object.assign({}, this._film, {
         watchlist: !this._film.watchlist
       }));
-      console.log(`стало ` + this._film.watchlist);
+    });
+
+    this._filmPopupComponent.setHistorytButtonClickHandler(() => {
+      this._onDataChange(this._film, Object.assign({}, this._film, {
+        history: !this._film.history
+      }));
+    });
+
+    this._filmPopupComponent.setFavoritesButtonClickHandler(() => {
+      this._onDataChange(this._film, Object.assign({}, this._film, {
+        favorites: !this._film.favorites
+      }));
     });
 
     document.addEventListener(`keydown`, this._onEscKeyDown);

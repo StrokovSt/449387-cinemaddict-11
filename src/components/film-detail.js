@@ -164,10 +164,10 @@ export default class FilmDetail extends AbstractSmartComponent {
   }
 
   setHistorytButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__controls-label--mark-as-watched`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
   }
 
   setFavoritesButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__controls-label--favorite`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
   }
 }
