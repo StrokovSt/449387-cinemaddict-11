@@ -6,8 +6,7 @@ export const sortTypes = {
   SORT_BY_RATING: `by rating`
 };
 
-const createSortOption = (sortValue, isActive) => {
-  const {name, sortType} = sortValue;
+const createSortOption = (sortType, name, isActive) => {
   return (
     `<li>
       <a href="#" data-sort-type="${sortType}" class="sort__button ${isActive ? `sort__button--active` : ``}">${name}</a>
@@ -15,24 +14,24 @@ const createSortOption = (sortValue, isActive) => {
   );
 };
 
-const createSort = (options) => {
-  const sortOptions = options.map((it, i) => createSortOption(it, i === 0)).join(`\n`);
+const createSort = () => {
   return (
     `<ul class="sort">
-      ${sortOptions}
+      ${createSortOption(sortTypes.DEFAULT, `Sort by default`, true)}
+      ${createSortOption(sortTypes.SORT_BY_DATE, `Sort by date`, false)}
+      ${createSortOption(sortTypes.SORT_BY_RATING, `Sort by rating`, false)}
     </ul>`
   );
 };
 
 export default class Sort extends AbstractComponent {
-  constructor(sorts) {
+  constructor() {
     super();
-    this._sorts = sorts;
     this._currentSortType = sortTypes.DEFAULT;
   }
 
   getTemplate() {
-    return createSort(this._sorts);
+    return createSort();
   }
 
   getSortType() {

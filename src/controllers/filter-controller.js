@@ -1,6 +1,6 @@
 import FilterComponent from "../components/filter.js";
 
-import {RenderPosition, render, remove, replace} from "../utils/render.js";
+import {RenderPosition, render} from "../utils/render.js";
 
 export default class FilterController {
   constructor(container, onDataChange) {
