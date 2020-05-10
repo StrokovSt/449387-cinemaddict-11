@@ -1,14 +1,14 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
-const emojiNames = [
+const EMOJI_NAMES = [
   `smile`,
   `sleeping`,
   `puke`,
   `angry`,
 ];
 
-const createEmojiOption = (emojiName, selectedEmoji) => {
-  const checkControl = (selectedEmoji === emojiName) ? `checked` : ``;
+const createEmojiOption = (emojiName, selectedEmojiName) => {
+  const checkControl = (emojiName === selectedEmojiName) ? `checked` : ``;
   return (
     `<input class="film-details__emoji-item visually-hidden" name="comment-${emojiName}" type="radio" id="emoji-${emojiName}" value="${emojiName}" ${checkControl}>
     <label class="film-details__emoji-label" for="emoji-${emojiName}">
@@ -48,7 +48,7 @@ const generateComments = (comments) => {
 
 const createFilmComments = (comments, selectedEmoji) => {
   const detailedComments = generateComments(comments);
-  const emojiOptions = generateEmojiOptions(emojiNames, selectedEmoji);
+  const emojiOptions = generateEmojiOptions(EMOJI_NAMES, selectedEmoji);
 
   return (
     `<section class="film-details__comments-wrap">
@@ -96,10 +96,14 @@ export default class FilmPopupComments extends AbstractSmartComponent {
   }
 
   setNewCommentEmoji(emoji) {
-   this._selectedEmoji = emoji;
- }
+    this._selectedEmoji = emoji;
+  }
 
   recoveryListeners() {
-   this.setEmojiClickHandler(this._emojiClickHandler);
- }
+    this.setEmojiClickHandler(this._emojiClickHandler);
+  }
+
+  setCloseButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, handler);
+  }
 }

@@ -105,6 +105,13 @@ export default class FilmCardController {
       this._filmPopupCommentsComponent.rerender();
     });
 
+    this._filmPopupCommentsComponent.setCloseButtonClickHandler((evt) => {
+      evt.preventDefault();
+      if (evt.target.tagName !== `BUTTON`) {
+        return;
+      }
+    });
+
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 

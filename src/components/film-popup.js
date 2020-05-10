@@ -12,7 +12,7 @@ const generateGenrys = (genry) => {
 };
 
 const createFilmDetailTemplate = (film) => {
-  const {title, rating, year, mounth, duration, genry, img, description, pg, director, writers, actors, country, comments, watchlist, history, favorites} = film;
+  const {title, rating, year, mounth, duration, genry, img, description, pg, director, writers, actors, country, watchlist, history, favorites} = film;
 
   const manyGenres = generateGenrys(genry);
 
