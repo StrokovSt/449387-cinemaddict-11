@@ -1,5 +1,6 @@
 import FilmCardComponent from "../components/film-card.js";
-import FilmDetailCardComponent from "../components/film-detail.js";
+import FilmPopupComponent from "../components/film-popup.js";
+import FilmPopupCommentsComponent from "../components/film-popup-comments.js";
 
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
@@ -12,6 +13,7 @@ export default class FilmCardController {
     this._film = {};
     this._filmCardComponent = null;
     this._filmPopupComponent = null;
+    this._filmPopupCommentsComponent = null;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -64,8 +66,10 @@ export default class FilmCardController {
     this._onViewChange(); // удалит другие попапы, если они есть
     const siteBodyElement = document.querySelector(`body`);
 
-    this._filmPopupComponent = new FilmDetailCardComponent(this._film);
+    this._filmPopupComponent = new FilmPopupComponent(this._film);
+    this._filmPopupCommentsComponent = new FilmPopupCommentsComponent(this._film.comments);
     render(siteBodyElement, this._filmPopupComponent, RenderPosition.BEFOREEND);
+    render(this._filmPopupComponent.getPopupCommentsContainer(), this._filmPopupCommentsComponent, RenderPosition.BEFOREEND);
 
     //  Обработчики на попап
 
@@ -89,6 +93,16 @@ export default class FilmCardController {
       this._onDataChange(this._film, Object.assign({}, this._film, {
         favorites: !this._film.favorites
       }));
+    });
+
+    //  Обработчики на комментарии
+
+    this._filmPopupCommentsComponent.setEmojiClickHandler((evt) => {
+      if (evt.target.tagName !== `INPUT`) {
+        return;
+      }
+      this._filmPopupCommentsComponent.setNewCommentEmoji(evt.target.value);
+      this._filmPopupCommentsComponent.rerender();
     });
 
     document.addEventListener(`keydown`, this._onEscKeyDown);

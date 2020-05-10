@@ -83,6 +83,31 @@ export default class FilmsSectionListController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
+  render(films) {
+    this._films = films;
+
+    const filterController = new FilterController(mainElement);
+    const filterNumbers = findOutTheFilterNumbers(films);
+    filterController.render(filterNumbers[0], filterNumbers[1], filterNumbers[2]);
+
+    render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._container, this._filmsSection, RenderPosition.BEFOREEND);
+    const filmsSection = document.querySelector(`.films`);
+
+    if (this._films.length === 0) {
+      render(filmsSection, this._failFilmSection, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    render(filmsSection, this._mainFilmSection, RenderPosition.BEFOREEND);
+    this._filmListContainer = document.querySelector(`.films-list__container`);
+    this._mainFilmsSection = document.querySelector(`.films-list`);
+
+    const newFilms = renderFilms(this._filmListContainer, films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
+    this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
+    this._renderShowMoreButton();
+  }
+
   _onDataChange(oldData, newData) {
     const filmIndex = this._films.findIndex((it) => it === oldData);
     const filmControllerIndex = this._showedFilmsControllers.findIndex((controller) => controller._film === oldData);
@@ -131,30 +156,5 @@ export default class FilmsSectionListController {
 
   _onViewChange() {
     this._showedFilmsControllers.forEach((it) => it.setDefaultView());
-  }
-
-  render(films) {
-    this._films = films;
-
-    const filterController = new FilterController(mainElement);
-    const filterNumbers = findOutTheFilterNumbers(films);
-    filterController.render(filterNumbers[0], filterNumbers[1], filterNumbers[2]);
-
-    render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
-    render(this._container, this._filmsSection, RenderPosition.BEFOREEND);
-    const filmsSection = document.querySelector(`.films`);
-
-    if (films.length === 0) {
-      render(filmsSection, this._failFilmSection, RenderPosition.BEFOREEND);
-      return;
-    }
-
-    render(filmsSection, this._mainFilmSection, RenderPosition.BEFOREEND);
-    this._filmListContainer = document.querySelector(`.films-list__container`);
-    this._mainFilmsSection = document.querySelector(`.films-list`);
-
-    const newFilms = renderFilms(this._filmListContainer, films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
-    this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
-    this._renderShowMoreButton();
   }
 }

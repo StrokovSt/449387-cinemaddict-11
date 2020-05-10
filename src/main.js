@@ -4,7 +4,7 @@ import FooterStatiscticComponent from "./components/footer-statistic.js";
 import {generateFilms} from "./mock/mock-film.js";
 import {RenderPosition, render} from "./utils/render.js";
 
-import FilmsSectionListController from "./controllers/film-section-controller.js";
+import FilmsSectionListController from "./controllers/film-board-controller.js";
 
 const FILMS_COUNT = 10;
 

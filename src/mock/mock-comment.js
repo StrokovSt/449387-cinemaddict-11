@@ -8,7 +8,6 @@ const generateComment = () => {
     autor: getRandomArrayItem(userList),
     date: getRandomArrayItem(commentTime),
     emoji: `${emoji}`,
-    img: `./images/emoji/${emoji}.png`,
   };
 };
 
