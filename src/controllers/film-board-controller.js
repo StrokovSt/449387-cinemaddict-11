@@ -1,9 +1,9 @@
 import SortComponent, {sortTypes} from "../components/sort.js";
-
 import FilmsSectionComponent from "../components/films-section.js";
 import MainFilmSectionComponent from "../components/films-list-section.js";
 import FailFilmSectionComponent from "../components/films-fail-section.js";
 import ShomMoreButtonComponent from "../components/show-more-button.js";
+import FilmsExtraSectionComponent from "../components/films-extra-section.js";
 
 import FilmCardController from "../controllers/film-card-controller.js";
 import FilterController from "../controllers/filter-controller.js";
@@ -41,7 +41,7 @@ const getSortedFilms = (films, sortType, from, to) => {
       sortedFilms = choosenFilms;
       break;
     case sortTypes.SORT_BY_DATE:
-      sortedFilms = choosenFilms.sort((a, b) => b.year - a.year);
+      sortedFilms = choosenFilms.sort((a, b) => b.date - a.date);
       break;
     case sortTypes.SORT_BY_RATING:
       sortedFilms = choosenFilms.sort((a, b) => b.rating - a.rating);
@@ -65,6 +65,7 @@ export default class FilmsSectionListController {
     this._container = container;
 
     this._films = [];
+    this._topRatedFilms = [];
     this._showedFilmsControllers = [];
 
     this._filmsSection = new FilmsSectionComponent();
@@ -87,7 +88,7 @@ export default class FilmsSectionListController {
     this._films = films;
 
     const filterController = new FilterController(mainElement);
-    const filterNumbers = findOutTheFilterNumbers(films);
+    const filterNumbers = findOutTheFilterNumbers(this._films);
     filterController.render(filterNumbers[0], filterNumbers[1], filterNumbers[2]);
 
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
@@ -103,9 +104,21 @@ export default class FilmsSectionListController {
     this._filmListContainer = document.querySelector(`.films-list__container`);
     this._mainFilmsSection = document.querySelector(`.films-list`);
 
-    const newFilms = renderFilms(this._filmListContainer, films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
+    const newFilms = renderFilms(this._filmListContainer, this._films.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange);
     this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
     this._renderShowMoreButton();
+
+    // рендер дополнительных бордов с фильмами
+
+    this._topRatedFilms = this._films.slice().sort((a, b) => b.rating - a.rating);
+    const mostCommentedFilms = this._films.slice().sort((a, b) => b.commentsNumber - a.commentsNumber);
+
+    const topRatingExtraSection = new FilmsExtraSectionComponent(`Top rated`);
+    render(filmsSection, topRatingExtraSection, RenderPosition.BEFOREEND);
+    const topRatingFilmsContainer = topRatingExtraSection.getElement().querySelector(`.films-list__container`);
+
+    const topRatingFilms = renderFilms(topRatingFilmsContainer, this._topRatedFilms.slice(0, 2), this._onDataChange, this._onViewChange);
+    this._showedFilmsControllers = this._showedFilmsControllers.concat(topRatingFilms);
   }
 
   _onDataChange(oldData, newData) {
