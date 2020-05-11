@@ -1,3 +1,4 @@
+import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createFilmGenry = (genry) => {
@@ -12,9 +13,10 @@ const generateGenrys = (genry) => {
 };
 
 const createFilmDetailTemplate = (film) => {
-  const {title, rating, year, mounth, duration, genry, img, description, pg, director, writers, actors, country, watchlist, history, favorites} = film;
+  const {title, rating, date, duration, genry, img, description, pg, director, writers, actors, country, watchlist, history, favorites} = film;
 
   const manyGenres = generateGenrys(genry);
+  const releaseDate = moment(date).format(`D MMMM YYYY`);
 
   return (
     `<section class="film-details">
@@ -53,7 +55,7 @@ const createFilmDetailTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${mounth} ${year}</td>
+                  <td class="film-details__cell">${releaseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
@@ -64,7 +66,7 @@ const createFilmDetailTemplate = (film) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${genry.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
                     <span class="film-details__genre">${manyGenres}</span>
                 </tr>

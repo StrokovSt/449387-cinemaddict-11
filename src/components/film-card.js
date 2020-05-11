@@ -1,7 +1,9 @@
+import moment from "moment";
 import AbstractComponent from "./abstract-component.js";
 
 const createFilmCardTemplate = (film) => {
-  const {title, rating, year, duration, genry, img, description, commentsNumber, watchlist, history, favorites} = film;
+  const {title, rating, date, duration, genry, img, description, commentsNumber, watchlist, history, favorites} = film;
+  const year = moment(date).format(`YYYY`);
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
