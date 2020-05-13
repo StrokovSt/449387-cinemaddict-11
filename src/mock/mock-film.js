@@ -4,7 +4,7 @@ import {generateComments} from "./mock-comment.js";
 
 //  ------------------------  Данные для карточки фильма
 
-const generateFilm = () => {
+const generateFilm = (item, id) => {
   const filmName = getRandomArrayItem(filmNames);
   const hourDuration = getRandomIntegerNumber(1, 4);
   const minuteDuration = getRandomIntegerNumber(0, 59);
@@ -19,6 +19,7 @@ const generateFilm = () => {
   const genrys = getRandomMixedArray(filmGenres, getRandomIntegerNumber(1, 4));
 
   return {
+    id,
     title: filmName,
     rating: `${getRandomIntegerNumber(0, 10)}.${getRandomIntegerNumber(0, 10)}`,
     date: newDate,
