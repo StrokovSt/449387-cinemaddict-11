@@ -43,8 +43,8 @@ const generateFilm = (item, id) => {
     comments: generateComments(getRandomIntegerNumber(1, 10)),
 
     watchlist: Math.random() > 0.5,
-    history: Math.random() > 0.5,
-    favorites: Math.random() > 0.5
+    alreadyWatched: Math.random() > 0.5,
+    favorite: Math.random() > 0.5
   };
 };
 

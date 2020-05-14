@@ -6,32 +6,10 @@ import ShomMoreButtonComponent from "../components/show-more-button.js";
 import FilmsExtraSectionComponent from "../components/films-extra-section.js";
 
 import FilmCardController from "../controllers/film-card-controller.js";
-import FilterController from "../controllers/filter-controller.js";
 
 import {RenderPosition, render, remove} from "../utils/render.js";
 
 const DEFAULT_FILMS_COUNT = 5;
-
-const mainElement = document.querySelector(`.main`);
-
-const findOutTheFilterNumbers = (films) => {
-  let watchNumber = 0;
-  let historyNumber = 0;
-  let favoritesNumber = 0;
-  for (let i = 0; i < films.length; i++) {
-    if (films[i].watchlist) {
-      watchNumber++;
-    }
-    if (films[i].history) {
-      historyNumber++;
-    }
-    if (films[i].favorites) {
-      favoritesNumber++;
-    }
-  }
-  const filterNumbers = [watchNumber, historyNumber, favoritesNumber];
-  return filterNumbers;
-};
 
 const getSortedFilms = (films, sortType, from, to) => {
   let sortedFilms = [];
@@ -87,10 +65,6 @@ export default class FilmsSectionListController {
 
   render() {
     const films = this._filmModel.getFilms();
-
-    const filterController = new FilterController(mainElement);
-    const filterNumbers = findOutTheFilterNumbers(films);
-    filterController.render(filterNumbers[0], filterNumbers[1], filterNumbers[2]);
 
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container, this._filmsSection, RenderPosition.BEFOREEND);

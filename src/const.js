@@ -232,4 +232,18 @@ const commentEmoji = [
   `smile`
 ];
 
-export {filmNames, filmGenres, filmDescriptions, ratingList, filmDirectors, filmWriters, filmActors, monthNames, countryNames, filmComments, userList, commentEmoji};
+const FilterTypes = {
+  ALL: `All movies`,
+  WATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`
+};
+
+const userRanks = [
+  `Novice`,
+  `Fan`,
+  `Movie Buff`
+];
+
+
+export {filmNames, filmGenres, filmDescriptions, ratingList, filmDirectors, filmWriters, filmActors, monthNames, countryNames, filmComments, userList, commentEmoji, FilterTypes, userRanks};

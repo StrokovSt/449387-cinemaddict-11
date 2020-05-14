@@ -44,14 +44,14 @@ export default class FilmCardController {
     this._filmCardComponent.setHistorytButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this._film, Object.assign({}, this._film, {
-        history: !this._film.history
+        alreadyWatched: !this._film.alreadyWatched
       }));
     });
 
     this._filmCardComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this._film, Object.assign({}, this._film, {
-        favorites: !this._film.favorites
+        favorite: !this._film.favorite
       }));
     });
 
@@ -85,13 +85,13 @@ export default class FilmCardController {
 
     this._filmPopupComponent.setHistorytButtonClickHandler(() => {
       this._onDataChange(this._film, Object.assign({}, this._film, {
-        history: !this._film.history
+        alreadyWatched: !this._film.alreadyWatched
       }));
     });
 
     this._filmPopupComponent.setFavoritesButtonClickHandler(() => {
       this._onDataChange(this._film, Object.assign({}, this._film, {
-        favorites: !this._film.favorites
+        favorite: !this._film.favorite
       }));
     });
 
