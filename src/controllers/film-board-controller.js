@@ -59,12 +59,14 @@ export default class FilmsSectionListController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._filmModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
-    const films = this._filmModel.getFilms();
+    const films = this._filmModel.getFilteredFilms();
 
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container, this._filmsSection, RenderPosition.BEFOREEND);
@@ -85,14 +87,6 @@ export default class FilmsSectionListController {
 
     // рендер дополнительных бордов с фильмами
 
-    this._topRatedFilms = films.slice().sort((a, b) => b.rating - a.rating);
-
-    const topRatingExtraSection = new FilmsExtraSectionComponent(`Top rated`);
-    render(filmsSection, topRatingExtraSection, RenderPosition.BEFOREEND);
-    const topRatingFilmsContainer = topRatingExtraSection.getElement().querySelector(`.films-list__container`);
-
-    const topRatingFilms = renderFilms(topRatingFilmsContainer, this._topRatedFilms.slice(0, 2), this._onDataChange, this._onViewChange);
-    this._showedFilmsControllers = this._showedFilmsControllers.concat(topRatingFilms);
   }
 
   _onDataChange(oldData, newData) {
@@ -108,8 +102,9 @@ export default class FilmsSectionListController {
   }
 
   _renderShowMoreButton() {
-    const films = this._filmModel.getFilms();
+    const films = this._filmModel.getFilteredFilms();
     remove(this._showMoreButtonComponent);
+
     if (this._showingFilmsCount >= films.length) {
       return;
     }
@@ -132,7 +127,7 @@ export default class FilmsSectionListController {
   }
 
   _onSortTypeChange(sortType) {
-    const films = this._filmModel.getFilms();
+    const films = this._filmModel.getFilteredFilms();
     this._showingFilmsCount = DEFAULT_FILMS_COUNT;
     const sortedFilms = getSortedFilms(films, sortType, 0, this._showingFilmsCount);
 
@@ -146,5 +141,22 @@ export default class FilmsSectionListController {
 
   _onViewChange() {
     this._showedFilmsControllers.forEach((it) => it.setDefaultView());
+  }
+
+  _removeFilms() {
+    this._showedFilmsControllers.forEach((it) => it.destroy());
+    this._showedFilmsControllers = [];
+  }
+
+  _updateCards() {
+    this._removeFilms();
+    this._container.innerHTML = ``;
+    this._showingFilmsCount = DEFAULT_FILMS_COUNT;
+    this._sortComponent.setSortTypeToDefault();
+    this.render();
+  }
+
+  _onFilterChange() {
+    this._updateCards();
   }
 }

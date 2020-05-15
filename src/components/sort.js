@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractComponent from './abstract-component.js';
 
 export const sortTypes = {
   DEFAULT: `default`,
@@ -9,14 +9,14 @@ export const sortTypes = {
 const createSortOption = (sortType, name, isActive) => {
   return (
     `<li>
-      <a href="#" data-sort-type="${sortType}" class="sort__button ${isActive ? `sort__button--active` : ``}">${name}</a>
+      <a href='#' data-sort-type='${sortType}' class='sort__button ${isActive ? `sort__button--active` : ``}'>${name}</a>
     </li>`
   );
 };
 
 const createSort = () => {
   return (
-    `<ul class="sort">
+    `<ul class='sort'>
       ${createSortOption(sortTypes.DEFAULT, `Sort by default`, true)}
       ${createSortOption(sortTypes.SORT_BY_DATE, `Sort by date`, false)}
       ${createSortOption(sortTypes.SORT_BY_RATING, `Sort by rating`, false)}
@@ -36,6 +36,20 @@ export default class Sort extends AbstractComponent {
 
   getSortType() {
     return this._currentSortType;
+  }
+
+  setSortTypeToDefault() {
+   this.removeActiveClass();
+   this._currentSortType = sortTypes.DEFAULT;
+   this.addActiveClass();
+ }
+
+  removeActiveClass() {
+    this.getElement().querySelector(`[data-sort-type='${this._currentSortType}']`).classList.remove(`sort__button--active`);
+  }
+
+  addActiveClass() {
+    this.getElement().querySelector(`[data-sort-type = '${this._currentSortType}']`).classList.add(`sort__button--active`);
   }
 
   setSortTypeChangeHandler(handler) {

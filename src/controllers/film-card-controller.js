@@ -128,6 +128,11 @@ export default class FilmCardController {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
+  destroy() {
+    remove(this._filmCardComponent);
+    this.setDefaultView();
+  }
+
   setDefaultView() {
     if (this._filmPopupComponent) {
       remove(this._filmPopupComponent);
