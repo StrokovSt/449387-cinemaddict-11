@@ -18,4 +18,8 @@ export default class ExtraFilmSection extends AbstractComponent {
   getTemplate() {
     return createExtraFilmSectionTemplate(this._name);
   }
+
+  getContainerElement() {
+    return this.getElement().querySelector(`.films-list__container`);
+  }
 }

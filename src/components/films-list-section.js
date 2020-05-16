@@ -19,4 +19,8 @@ export default class MainFilmSectionComponent extends AbstractComponent {
   getTemplate() {
     return createMainFilmSectionTemplate(this._isFilmsExist);
   }
+
+  getContainerElement() {
+    return this.getElement().querySelector(`.films-list__container`);
+  }
 }

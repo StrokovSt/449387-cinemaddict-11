@@ -39,10 +39,10 @@ export default class Sort extends AbstractComponent {
   }
 
   setSortTypeToDefault() {
-   this.removeActiveClass();
-   this._currentSortType = sortTypes.DEFAULT;
-   this.addActiveClass();
- }
+    this.removeActiveClass();
+    this._currentSortType = sortTypes.DEFAULT;
+    this.addActiveClass();
+  }
 
   removeActiveClass() {
     this.getElement().querySelector(`[data-sort-type='${this._currentSortType}']`).classList.remove(`sort__button--active`);

@@ -4,7 +4,7 @@ export default class Comments {
   }
 
   setComments(comments) {
-    this._comments = Array.from(comments;
+    this._comments = Array.from(comments);
   }
 
   getComments() {
@@ -19,6 +19,7 @@ export default class Comments {
     }
 
     this._comments = [].concat(this._films.slice(0, index), this._films.slice(index + 1));
+    return true;
   }
 
   addComment(comment) {
