@@ -8,7 +8,7 @@ import {RenderPosition, render} from "./utils/render.js";
 import FilmsBoardController from "./controllers/film-board-controller.js";
 import FilterController from "./controllers/filter-controller.js";
 
-const FILMS_COUNT = 10;
+const FILMS_COUNT = 20;
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
@@ -20,10 +20,11 @@ filmModel.setFilms(films);
 
 //  ---------------------------------------- Заполнение страницы контентом
 
-render(siteHeaderElement, new ProfileComponent(), RenderPosition.BEFOREEND);
-
 const filterController = new FilterController(siteMainElement, filmModel);
 filterController.render();
+const watchedFilmsCount = filterController.getWatchedFilmsCount();
+
+render(siteHeaderElement, new ProfileComponent(watchedFilmsCount), RenderPosition.BEFOREEND);
 
 render(siteFooterElement, new FooterStatiscticComponent(FILMS_COUNT), RenderPosition.BEFOREEND);
 

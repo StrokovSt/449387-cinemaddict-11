@@ -12,6 +12,7 @@ export default class FilterController {
 
     this._activeFilterType = FilterTypes.ALL;
     this._filterComponent = null;
+    this._watchedFilmsCount = 0;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
@@ -30,6 +31,9 @@ export default class FilterController {
         checked: filterType === this._activeFilterType,
       };
     });
+
+    this._watchedFilmsCount = getFilmsByFilter(FilterTypes.WATCHLIST, allFilms).length;
+    console.log(`Watched films ` , this._watchedFilmsCount);
 
     const oldFilterComponent = this._filterComponent;
     this._filterComponent = new FilterComponent(filters);
@@ -51,5 +55,9 @@ export default class FilterController {
     this._activeFilterType = filterType;
     this.render();
   }
+
+  getWatchedFilmsCount() {
+   return this._watchedFilmsCount;
+ }
 
 }

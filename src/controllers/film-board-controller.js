@@ -9,6 +9,7 @@ import FilmCardController from "../controllers/film-card-controller.js";
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
 const DEFAULT_FILMS_COUNT = 5;
+const DEFAULT_EXTRA_FILMS_COUNT = 2;
 
 const getSortedFilms = (films, sortType, from, to) => {
   let sortedFilms = [];
@@ -92,7 +93,7 @@ export default class FilmsSectionListController {
 
     if (topRatedFilms.length > 0) {
       render(filmsSection, this._topRatedFilmsExtraSection, RenderPosition.BEFOREEND);
-      const newTopRatedFilms = renderFilms(this._topRatedFilmsExtraSection.getContainerElement(), topRatedFilms.slice(0, 2), this._onDataChange, this._onViewChange, this._onPopupDataChange);
+      const newTopRatedFilms = renderFilms(this._topRatedFilmsExtraSection.getContainerElement(), topRatedFilms.slice(0, DEFAULT_EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._onPopupDataChange);
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newTopRatedFilms);
     }
 
@@ -102,7 +103,7 @@ export default class FilmsSectionListController {
 
     if (topRatedFilms.length > 0) {
       render(filmsSection, this._topCommentedFilmsExtraSection, RenderPosition.BEFOREEND);
-      const newTopCommetnedFilms = renderFilms(this._topCommentedFilmsExtraSection.getContainerElement(), topCommentedFilms.slice(0, 2), this._onDataChange, this._onViewChange, this._onPopupDataChange);
+      const newTopCommetnedFilms = renderFilms(this._topCommentedFilmsExtraSection.getContainerElement(), topCommentedFilms.slice(0, DEFAULT_EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._onPopupDataChange);
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newTopCommetnedFilms);
     }
   }
