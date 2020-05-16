@@ -5,10 +5,11 @@ import FilmPopupCommentsComponent from "../components/film-popup-comments.js";
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
 export default class FilmCardController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, onPopupDataChange) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._onPopupDataChange = onPopupDataChange;
 
     this._film = {};
     this._filmCardComponent = null;
@@ -75,22 +76,23 @@ export default class FilmCardController {
 
     this._filmPopupComponent.setCloseButtonHandler(() => {
       this._onFilmDetailCloseButtonClick();
+      this._onDataChange(this._film, this._film);
     });
 
     this._filmPopupComponent.setWatchlistButtonClickHandler(() => {
-      this._onDataChange(this._film, Object.assign({}, this._film, {
+      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         watchlist: !this._film.watchlist
       }));
     });
 
     this._filmPopupComponent.setHistorytButtonClickHandler(() => {
-      this._onDataChange(this._film, Object.assign({}, this._film, {
+      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         alreadyWatched: !this._film.alreadyWatched
       }));
     });
 
     this._filmPopupComponent.setFavoritesButtonClickHandler(() => {
-      this._onDataChange(this._film, Object.assign({}, this._film, {
+      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         favorite: !this._film.favorite
       }));
     });
@@ -126,6 +128,7 @@ export default class FilmCardController {
       remove(this._filmPopupComponent);
     }
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._onDataChange(this._film, this._film);
   }
 
   destroy() {
