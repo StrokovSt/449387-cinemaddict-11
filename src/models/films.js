@@ -17,6 +17,14 @@ export default class Films {
     return this._films;
   }
 
+  getTopRatedFilms() {
+    return this._films.slice().sort((a, b) => b.rating - a.rating);
+  }
+
+  getTopCommentedFilms() {
+    return this._films.slice().sort((a, b) => b.commentsNumber - a.commentsNumber);
+  }
+
   setFilms(films) {
     this._films = Array.from(films);
     this._callHandlers(this._dataChangeHandlers);
