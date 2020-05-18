@@ -53,7 +53,6 @@ export default class FilmsSectionListController {
     this._sortComponent = new SortComponent();
     this._showingFilmsCount = DEFAULT_FILMS_COUNT;
     this._filmListContainer = null;
-    this._mainFilmsSection = null;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onPopupDataChange = this._onPopupDataChange.bind(this);
@@ -81,7 +80,7 @@ export default class FilmsSectionListController {
     render(filmsSection, this._mainFilmSection, RenderPosition.BEFOREEND);
 
     this._filmListContainer = this._mainFilmSection.getContainerElement();
-    this._mainFilmsSection = document.querySelector(`.films-list`);
+    this._mainFilmListSection = document.querySelector(`.films-list`);
 
     const newFilms = renderFilms(this._filmListContainer, sortedFilms.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange, this._onPopupDataChange);
     this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
@@ -142,7 +141,7 @@ export default class FilmsSectionListController {
       return;
     }
 
-    render(this._mainFilmsSection, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
+    render(this._mainFilmListSection, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
     this._showMoreButtonComponent.setClickHandler(() => {
       const prevFilmsCount = this._showingFilmsCount;

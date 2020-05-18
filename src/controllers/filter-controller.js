@@ -33,8 +33,6 @@ export default class FilterController {
     });
 
     this._watchedFilmsCount = getFilmsByFilter(FilterTypes.WATCHLIST, allFilms).length;
-    console.log(`Watched films ` , this._watchedFilmsCount);
-
     const oldFilterComponent = this._filterComponent;
     this._filterComponent = new FilterComponent(filters);
 
@@ -57,7 +55,7 @@ export default class FilterController {
   }
 
   getWatchedFilmsCount() {
-   return this._watchedFilmsCount;
- }
+    return this._watchedFilmsCount;
+  }
 
 }

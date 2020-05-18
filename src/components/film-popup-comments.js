@@ -106,6 +106,6 @@ export default class FilmPopupComments extends AbstractSmartComponent {
   }
 
   setCloseButtonClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__comment-delete`).addEventListener(`click`, handler);
   }
 }
