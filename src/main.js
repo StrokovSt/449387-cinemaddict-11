@@ -8,7 +8,7 @@ import {RenderPosition, render} from "./utils/render.js";
 import FilmsBoardController from "./controllers/film-board-controller.js";
 import FilterController from "./controllers/filter-controller.js";
 
-const FILMS_COUNT = 3;
+const FILMS_COUNT = 10;
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);

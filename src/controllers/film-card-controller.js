@@ -1,6 +1,6 @@
 import FilmCardComponent from "../components/film-card.js";
 
-import PopupController from "../controllers/popup-controller.js"
+import PopupController from "../controllers/popup-controller.js";
 
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
