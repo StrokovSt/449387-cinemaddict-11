@@ -95,6 +95,10 @@ export default class FilmDetail extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+
+    this._watchlistClickHandler = null;
+    this._watchedClickHandler = null;
+    this._favoriteClickHandler = null;
   }
 
   getTemplate() {
@@ -109,15 +113,30 @@ export default class FilmDetail extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 
-  setWatchlistButtonClickHandler(handler) {
+  setWatclistClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this._watchlistClickHandler = handler;
   }
 
-  setHistorytButtonClickHandler(handler) {
+  setWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this._watchedClickHandler = handler;
   }
 
-  setFavoritesButtonClickHandler(handler) {
+  setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this._favoriteClickHandler = handler;
   }
+
+  recoveryListeners() {
+    this.setWatclistClickHandler(this._watchlistClickHandler);
+    this.setWatchedClickHandler(this._watchedClickHandler);
+    this.setFavoriteClickHandler(this._favoriteClickHandler);
+  }
+
+  rerender(film) {
+    this._film = film;
+    super.rerender();
+  }
+
 }

@@ -22,14 +22,15 @@ export default class PopupController {
   render(film) {
     this._film = film;
 
-    this._onViewChange();
     const oldPopupComponent = this._popupComponent;
+    this._popupComponent = new PopupComponent(this._film);
+
     this._popupCommentsComponent = new PopupCommentsComponent(this._film.comments);
 
     if (oldPopupComponent) {
       replace(this._popupComponent, oldPopupComponent);
     } else {
-      this._popupComponent = new PopupComponent(this._film);
+      this._onViewChange();
       render(siteBodyElement, this._popupComponent, RenderPosition.BEFOREEND);
     }
 
@@ -42,21 +43,21 @@ export default class PopupController {
       this._onFilmDetailCloseButtonClick();
     });
 
-    this._popupComponent.setWatchlistButtonClickHandler((evt) => {
+    this._popupComponent.setWatclistClickHandler((evt) => {
       evt.preventDefault();
       this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         watchlist: !this._film.watchlist
       }));
     });
 
-    this._popupComponent.setHistorytButtonClickHandler((evt) => {
+    this._popupComponent.setWatchedClickHandler((evt) => {
       evt.preventDefault();
       this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         alreadyWatched: !this._film.alreadyWatched
       }));
     });
 
-    this._popupComponent.setFavoritesButtonClickHandler((evt) => {
+    this._popupComponent.setFavoriteClickHandler((evt) => {
       evt.preventDefault();
       this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         favorite: !this._film.favorite

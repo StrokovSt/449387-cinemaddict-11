@@ -67,6 +67,7 @@ export default class FilmsSectionListController {
   render() {
     const films = this._filmModel.getFilteredFilms();
     const sortedFilms = getSortedFilms(films, this._sortComponent.getSortType(), 0, this._showingFilmsCount);
+
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     render(this._container, this._filmsSection, RenderPosition.BEFOREEND);
     const filmsSection = document.querySelector(`.films`);

@@ -1,6 +1,6 @@
 import FilmCardComponent from "../components/film-card.js";
-import FilmPopupComponent from "../components/film-popup.js";
-import FilmPopupCommentsComponent from "../components/film-popup-comments.js";
+
+import PopupController from "../controllers/popup-controller.js"
 
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
@@ -13,10 +13,10 @@ export default class FilmCardController {
 
     this._film = {};
     this._filmCardComponent = null;
-    this._filmPopupComponent = null;
-    this._filmPopupCommentsComponent = null;
 
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._popupController = null;
+
+    this._showPopup = this._showPopup.bind(this);
   }
 
   render(film) {
@@ -29,6 +29,9 @@ export default class FilmCardController {
 
     if (oldFilmCardComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);
+      if (this._popupController) {
+        this._popupController.render(this._film);
+      }
     } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
     }
@@ -57,78 +60,14 @@ export default class FilmCardController {
     });
 
     this._filmCardComponent.setFilmClickHandler(() => {
-      this._renderFilmPopup();
+      this._showPopup();
     });
   }
 
-  //  Рендер попапа  (подробной карточки фильма)
-
-  _renderFilmPopup() {
-    this._onViewChange(); // удалит другие попапы, если они есть
-    const siteBodyElement = document.querySelector(`body`);
-
-    this._filmPopupComponent = new FilmPopupComponent(this._film);
-    this._filmPopupCommentsComponent = new FilmPopupCommentsComponent(this._film.comments);
-    render(siteBodyElement, this._filmPopupComponent, RenderPosition.BEFOREEND);
-    render(this._filmPopupComponent.getPopupCommentsContainer(), this._filmPopupCommentsComponent, RenderPosition.BEFOREEND);
-
-    //  Обработчики на попап
-
-    this._filmPopupComponent.setCloseButtonHandler(() => {
-      this._onFilmDetailCloseButtonClick();
-      this._onDataChange(this._film, this._film);
-    });
-
-    this._filmPopupComponent.setWatchlistButtonClickHandler(() => {
-      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        watchlist: !this._film.watchlist
-      }));
-    });
-
-    this._filmPopupComponent.setHistorytButtonClickHandler(() => {
-      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        alreadyWatched: !this._film.alreadyWatched
-      }));
-    });
-
-    this._filmPopupComponent.setFavoritesButtonClickHandler(() => {
-      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        favorite: !this._film.favorite
-      }));
-    });
-
-    //  Обработчики на комментарии
-
-    this._filmPopupCommentsComponent.setEmojiClickHandler((evt) => {
-      if (evt.target.tagName !== `INPUT`) {
-        return;
-      }
-      this._filmPopupCommentsComponent.setNewCommentEmoji(evt.target.value);
-      this._filmPopupCommentsComponent.rerender();
-    });
-
-    this._filmPopupCommentsComponent.setCloseButtonClickHandler((evt) => {
-      evt.preventDefault();
-      if (evt.target.tagName !== `BUTTON`) {
-        return;
-      }
-    });
-
-    document.addEventListener(`keydown`, this._onEscKeyDown);
-  }
-
-  _onFilmDetailCloseButtonClick() {
-    remove(this._filmPopupComponent);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
-  }
-
-  _onEscKeyDown(evt) {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-    if (isEscKey) {
-      remove(this._filmPopupComponent);
-    }
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._onDataChange(this._film, this._film);
+  _showPopup() {
+    this._onViewChange();
+    this._popupController = new PopupController(this._onDataChange, this._onViewChange, this._onPopupDataChange);
+    this._popupController.render(this._film);
   }
 
   destroy() {
@@ -137,8 +76,9 @@ export default class FilmCardController {
   }
 
   setDefaultView() {
-    if (this._filmPopupComponent) {
-      remove(this._filmPopupComponent);
+    if (this._popupController) {
+      this._popupController.remove();
     }
   }
+
 }
