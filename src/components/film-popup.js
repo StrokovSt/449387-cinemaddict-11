@@ -13,7 +13,7 @@ const generateGenrys = (genry) => {
 };
 
 const createFilmDetailTemplate = (film) => {
-  const {title, rating, date, duration, genry, img, description, pg, director, writers, actors, country, watchlist, alreadyWatched, favorite} = film;
+  const {title, rating, date, duration, genry, img, description, pg, director, writers, actors, country} = film;
 
   const manyGenres = generateGenrys(genry);
   const releaseDate = moment(date).format(`D MMMM YYYY`);
