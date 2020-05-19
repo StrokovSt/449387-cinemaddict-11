@@ -2,7 +2,7 @@ import {getRandomArrayItem} from "../utils/auxiliary-functions.js";
 import {filmComments, userList, commentEmoji} from "../const.js";
 import {getRandomIntegerNumber} from "../utils/auxiliary-functions.js";
 
-const generateComment = () => {
+const generateComment = (item, id) => {
   const emoji = getRandomArrayItem(commentEmoji);
 
   const newDate = new Date();
@@ -10,6 +10,7 @@ const generateComment = () => {
   newDate.setHours(getRandomIntegerNumber(11, 24));
 
   return {
+    id,
     autor: getRandomArrayItem(userList),
     comment: getRandomArrayItem(filmComments),
     date: newDate,

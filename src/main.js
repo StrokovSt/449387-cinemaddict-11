@@ -28,5 +28,5 @@ render(siteHeaderElement, new ProfileComponent(watchedFilmsCount), RenderPositio
 
 render(siteFooterElement, new FooterStatiscticComponent(FILMS_COUNT), RenderPosition.BEFOREEND);
 
-const filmsListController = new FilmsBoardController(siteMainElement, filmModel);
-filmsListController.render(films);
+const filmsBoardController = new FilmsBoardController(siteMainElement, filmModel);
+filmsBoardController.render(films);
