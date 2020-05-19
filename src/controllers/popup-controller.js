@@ -1,5 +1,6 @@
 import PopupComponent from "../components/film-popup.js";
-import PopupCommentsComponent from "../components/film-popup-comments.js";
+import PopupCommentsComponent from "../components/popup-comments.js";
+import PopupTypeControlsComponent from "../components/popop-type-controls.js";
 
 import CommentController from "../controllers/comment-controller.js";
 
@@ -27,6 +28,7 @@ export default class PopupController {
     this._film = {};
     this._popupComponent = null;
     this._popupCommentsComponent = null;
+    this._popupTypeControlsComponent = null;
     this._commentsModel = new CommentsModel();
 
     this._showedCommentsControllers = [];
@@ -38,22 +40,26 @@ export default class PopupController {
 
   render(film) {
     this._film = film;
-
-    const oldPopupComponent = this._popupComponent;
-    this._popupComponent = new PopupComponent(this._film);
-
-    if (oldPopupComponent) {
-      replace(this._popupComponent, oldPopupComponent);
-    } else {
-      this._onViewChange();
-      render(siteBodyElement, this._popupComponent, RenderPosition.BEFOREEND);
-    }
-
     this._commentsModel.setComments(this._film.comments);
     const comments = this._commentsModel.getComments();
 
-    this._popupCommentsComponent = new PopupCommentsComponent(this._film.comments);
-    render(this._popupComponent.getPopupCommentsContainer(), this._popupCommentsComponent, RenderPosition.BEFOREEND);
+    const oldPopupComponent = this._popupComponent;
+    const oldPopupCommentsComponent = this._popupCommentsComponent;
+    const oldPopupTypeControlsComponent = this._popupTypeControlsComponent;
+
+    this._popupTypeControlsComponent = new PopupTypeControlsComponent(this._film);
+    this._popupCommentsComponent = new PopupCommentsComponent(comments);
+
+    if (oldPopupComponent) {
+      replace(this._popupTypeControlsComponent, oldPopupTypeControlsComponent);
+      replace(this._popupCommentsComponent, oldPopupCommentsComponent);
+    } else {
+      this._onViewChange();
+      this._popupComponent = new PopupComponent(this._film);
+      render(siteBodyElement, this._popupComponent, RenderPosition.BEFOREEND);
+      render(this._popupComponent.getPopupControlsContainer(), this._popupTypeControlsComponent, RenderPosition.BEFOREEND);
+      render(this._popupComponent.getPopupCommentsContainer(), this._popupCommentsComponent, RenderPosition.BEFOREEND);
+    }
 
     const newComments = renderComments(this._popupCommentsComponent.getPopupCommentsList(), comments, this._onCommentsDataChange);
     this._showedCommentsControllers = this._showedCommentsControllers.concat(newComments);
@@ -65,21 +71,21 @@ export default class PopupController {
       this._onFilmDetailCloseButtonClick();
     });
 
-    this._popupComponent.setWatclistClickHandler((evt) => {
+    this._popupTypeControlsComponent.setWatchlistClickHandler((evt) => {
       evt.preventDefault();
       this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         watchlist: !this._film.watchlist
       }));
     });
 
-    this._popupComponent.setWatchedClickHandler((evt) => {
+    this._popupTypeControlsComponent.setWatchedClickHandler((evt) => {
       evt.preventDefault();
       this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         alreadyWatched: !this._film.alreadyWatched
       }));
     });
 
-    this._popupComponent.setFavoriteClickHandler((evt) => {
+    this._popupTypeControlsComponent.setFavoriteClickHandler((evt) => {
       evt.preventDefault();
       this._onPopupDataChange(this._film, Object.assign({}, this._film, {
         favorite: !this._film.favorite
