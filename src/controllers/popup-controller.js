@@ -31,10 +31,12 @@ export default class PopupController {
     this._popupTypeControlsComponent = null;
     this._commentsModel = new CommentsModel();
 
+    this._newText = null;
+
     this._showedCommentsControllers = [];
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
-    this._onFilmDetailCloseButtonClick = this._onFilmDetailCloseButtonClick.bind(this);
+    this._onPopupCloseButtonClick = this._onPopupCloseButtonClick.bind(this);
     this._onCommentsDataChange = this._onCommentsDataChange.bind(this);
   }
 
@@ -68,7 +70,7 @@ export default class PopupController {
 
     this._popupComponent.setCloseButtonHandler(() => {
       this._onDataChange(this._film, this._film);
-      this._onFilmDetailCloseButtonClick();
+      this._onPopupCloseButtonClick();
     });
 
     this._popupTypeControlsComponent.setWatchlistClickHandler((evt) => {
@@ -100,7 +102,17 @@ export default class PopupController {
       }
       this._popupCommentsComponent.setNewCommentEmoji(evt.target.value);
       this._popupCommentsComponent.rerender();
+      renderComments(this._popupCommentsComponent.getPopupCommentsList(), comments, this._onCommentsDataChange);
     });
+
+    this._popupCommentsComponent.setTextChangeHandler((evt) => {
+      if (evt.target.tagName !== `TEXTAREA`) {
+        return;
+      }
+      this._popupCommentsComponent.setNewCommentText(evt.target.value);
+    });
+
+    this._popupCommentsComponent.setSubmitHandler(this._onCommentsDataChange);
 
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
@@ -113,10 +125,15 @@ export default class PopupController {
           comments: this._commentsModel.getComments()
         }));
       }
+    } else if (id === null) {
+      this._commentsModel.addComment(newComment);
+      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
+        comments: this._commentsModel.getComments()
+      }));
     }
   }
 
-  _onFilmDetailCloseButtonClick() {
+  _onPopupCloseButtonClick() {
     remove(this._popupComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
@@ -125,9 +142,9 @@ export default class PopupController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
     if (isEscKey) {
       remove(this._popupComponent);
+      this._onDataChange(this._film, this._film);
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
-    this._onDataChange(this._film, this._film);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   remove() {

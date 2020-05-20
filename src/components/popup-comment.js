@@ -2,7 +2,7 @@ import moment from "moment";
 import AbstractComponent from "./abstract-component.js";
 
 const createCommentTemplate = (commentContent) => {
-  const {comment, autor, date, emotion} = commentContent;
+  const {comment, author, date, emotion} = commentContent;
   const commentDate = moment(date).startOf(`m`).fromNow();
   return (
     `<li class="film-details__comment">
@@ -12,7 +12,7 @@ const createCommentTemplate = (commentContent) => {
       <div>
         <p class="film-details__comment-text">${comment}</p>
         <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${autor}</span>
+          <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${commentDate}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>

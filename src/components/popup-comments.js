@@ -22,7 +22,7 @@ const generateEmojiOptions = (emojiNames, selectedEmoji) => {
   return emojiMurkup;
 };
 
-const createFilmComments = (comments, selectedEmoji) => {
+const createFilmComments = (comments, selectedEmoji, newCommentText) => {
   const emojiOptions = generateEmojiOptions(EMOJI_NAMES, selectedEmoji);
 
   return (
@@ -35,7 +35,7 @@ const createFilmComments = (comments, selectedEmoji) => {
           <img src="./images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">
         </div>
         <label class="film-details__comment-label">
-          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newCommentText}</textarea>
         </label>
         <div class="film-details__emoji-list">
           ${emojiOptions}
@@ -51,7 +51,11 @@ export default class FilmPopupComments extends AbstractSmartComponent {
 
     this._comments = comments;
     this._selectedEmoji = `smile`;
+    this._newCommentText = ``;
+
+    this._textChangeHandler = null;
     this._emojiClickHandler = null;
+    this._submitHandler = null;
 
     this.recoveryListeners();
   }
@@ -61,7 +65,7 @@ export default class FilmPopupComments extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createFilmComments(this._comments, this._selectedEmoji);
+    return createFilmComments(this._comments, this._selectedEmoji, this._newCommentText);
   }
 
   getPopupCommentsList() {
@@ -73,11 +77,39 @@ export default class FilmPopupComments extends AbstractSmartComponent {
     this._emojiClickHandler = handler;
   }
 
+  setTextChangeHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keyup`, handler);
+    this._textChangeHandler = handler;
+  }
+
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, (evt) => {
+      const isKey = (evt.key === `Enter` && (evt.ctrlKey || evt.metaKey));
+      if (evt.target.value !== `` && isKey) {
+        const newComment = Object.assign({}, {
+          id: this._comments.length + 1,
+          author: `Korovka Meowsky`,
+          comment: this._newCommentText,
+          date: new Date(),
+          emotion: this._selectedEmoji,
+        });
+        handler(null, newComment);
+      }
+    });
+    this._submitHandler = handler;
+  }
+
+  setNewCommentText(newCommentText) {
+    this._newCommentText = newCommentText;
+  }
+
   setNewCommentEmoji(emoji) {
     this._selectedEmoji = emoji;
   }
 
   recoveryListeners() {
     this.setEmojiClickHandler(this._emojiClickHandler);
+    this.setTextChangeHandler(this._textChangeHandler);
+    this.setSubmitHandler(this._submitHandler);
   }
 }

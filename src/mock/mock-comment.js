@@ -11,7 +11,7 @@ const generateComment = (item, id) => {
 
   return {
     id,
-    autor: getRandomArrayItem(userList),
+    author: getRandomArrayItem(userList),
     comment: getRandomArrayItem(filmComments),
     date: newDate,
     emotion: `${emoji}`,
