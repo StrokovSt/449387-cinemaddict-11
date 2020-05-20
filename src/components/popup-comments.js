@@ -1,3 +1,4 @@
+import {encode} from "he";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const EMOJI_NAMES = [
@@ -23,6 +24,7 @@ const generateEmojiOptions = (emojiNames, selectedEmoji) => {
 };
 
 const createFilmComments = (comments, selectedEmoji, newCommentText) => {
+  const encodeNewCommentText = encode(newCommentText);
   const emojiOptions = generateEmojiOptions(EMOJI_NAMES, selectedEmoji);
 
   return (
@@ -35,7 +37,7 @@ const createFilmComments = (comments, selectedEmoji, newCommentText) => {
           <img src="./images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">
         </div>
         <label class="film-details__comment-label">
-          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newCommentText}</textarea>
+          <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${encodeNewCommentText}</textarea>
         </label>
         <div class="film-details__emoji-list">
           ${emojiOptions}
