@@ -1,14 +1,20 @@
 import {getRandomArrayItem} from "../utils/auxiliary-functions.js";
-import {filmComments, userList, commentTime, commentEmoji} from "../const.js";
+import {filmComments, userList, commentEmoji} from "../const.js";
+import {getRandomIntegerNumber} from "../utils/auxiliary-functions.js";
 
-const generateComment = () => {
+const generateComment = (item, id) => {
   const emoji = getRandomArrayItem(commentEmoji);
+
+  const newDate = new Date();
+  newDate.setFullYear(getRandomIntegerNumber(2019, 2020), getRandomIntegerNumber(0, 12), getRandomIntegerNumber(0, 28));
+  newDate.setHours(getRandomIntegerNumber(11, 24));
+
   return {
-    text: getRandomArrayItem(filmComments),
-    autor: getRandomArrayItem(userList),
-    date: getRandomArrayItem(commentTime),
-    emoji: `${emoji}`,
-    img: `./images/emoji/${emoji}.png`,
+    id,
+    author: getRandomArrayItem(userList),
+    comment: getRandomArrayItem(filmComments),
+    date: newDate,
+    emotion: `${emoji}`,
   };
 };
 

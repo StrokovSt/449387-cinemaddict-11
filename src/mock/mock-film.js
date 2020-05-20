@@ -1,16 +1,16 @@
 import {getRandomIntegerNumber, getRandomArrayItem, getRandomMixedArray} from "../utils/auxiliary-functions.js";
-import {filmNames, filmGenres, filmDescriptions, ratingList, filmDirectors, filmWriters, filmActors, monthNames, countryNames} from "../const.js";
+import {filmNames, filmGenres, filmDescriptions, ratingList, filmDirectors, filmWriters, filmActors, countryNames} from "../const.js";
 import {generateComments} from "./mock-comment.js";
 
 //  ------------------------  Данные для карточки фильма
 
-const generateFilm = () => {
+const generateFilm = (item, id) => {
   const filmName = getRandomArrayItem(filmNames);
   const hourDuration = getRandomIntegerNumber(1, 4);
   const minuteDuration = getRandomIntegerNumber(0, 59);
 
-  const data = new Date();
-  data.setFullYear(getRandomIntegerNumber(1940, 2020), getRandomIntegerNumber(0, 11), getRandomIntegerNumber(0, 31));
+  const newDate = new Date();
+  newDate.setFullYear(getRandomIntegerNumber(1940, 2020), getRandomIntegerNumber(0, 12), getRandomIntegerNumber(0, 31));
 
   const filmDescription = getRandomMixedArray(filmDescriptions, getRandomIntegerNumber(1, 6)).reduce(function (sum, current) {
     return sum + current + ` `;
@@ -19,10 +19,10 @@ const generateFilm = () => {
   const genrys = getRandomMixedArray(filmGenres, getRandomIntegerNumber(1, 4));
 
   return {
+    id,
     title: filmName,
     rating: `${getRandomIntegerNumber(0, 10)}.${getRandomIntegerNumber(0, 10)}`,
-    year: data.getFullYear(),
-    mounth: data.getDate() + ` ` + monthNames[data.getMonth()],
+    date: newDate,
     duration: `${hourDuration}h ${minuteDuration}m`,
     genry: genrys,
     img: `./images/posters/${filmName}.jpg`,
@@ -43,8 +43,8 @@ const generateFilm = () => {
     comments: generateComments(getRandomIntegerNumber(1, 10)),
 
     watchlist: Math.random() > 0.5,
-    history: Math.random() > 0.5,
-    favorites: Math.random() > 0.5
+    alreadyWatched: Math.random() > 0.5,
+    favorite: Math.random() > 0.5
   };
 };
 

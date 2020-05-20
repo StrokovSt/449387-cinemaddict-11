@@ -1,7 +1,9 @@
+import moment from "moment";
 import AbstractComponent from "./abstract-component.js";
 
 const createFilmCardTemplate = (film) => {
-  const {title, rating, year, duration, genry, img, description, commentsNumber} = film;
+  const {title, rating, date, duration, genry, img, description, comments, watchlist, alreadyWatched, favorite} = film;
+  const year = moment(date).format(`YYYY`);
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
@@ -13,11 +15,11 @@ const createFilmCardTemplate = (film) => {
       </p>
       <img src="${img}" alt="" class="film-card__poster">
       <p class="film-card__description">${description}</p>
-      <a class="film-card__comments">${commentsNumber} comments</a>
+      <a class="film-card__comments">${comments.length} comments</a>
       <form class="film-card__controls">
-        <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-        <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-        <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+        <button class="film-card__controls-item button ${watchlist ? `film-card__controls-item--active` : ``} film-card__controls-item--add-to-watchlist">Add to watchlist</button>
+        <button class="film-card__controls-item button ${alreadyWatched ? `film-card__controls-item--active` : ``} film-card__controls-item--mark-as-watched">Mark as watched</button>
+        <button class="film-card__controls-item button ${favorite ? `film-card__controls-item--active` : ``} film-card__controls-item--favorite">Mark as favorite</button>
       </form>
     </article>`
   );
@@ -34,6 +36,20 @@ export default class FilmCard extends AbstractComponent {
   }
 
   setFilmClickHandler(handler) {
-    this.getElement().addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);
+  }
+
+  setWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, handler);
+  }
+
+  setHistorytButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, handler);
+  }
+
+  setFavoritesButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }
 }

@@ -1,35 +1,32 @@
 import ProfileComponent from "./components/profile.js";
 import FooterStatiscticComponent from "./components/footer-statistic.js";
+import FilmsModel from "./models/films.js";
 
 import {generateFilms} from "./mock/mock-film.js";
 import {RenderPosition, render} from "./utils/render.js";
 
-import FilmsSectionListController from "./controllers/film-section-controller.js";
-import FilmsExtraSectionListController from "./controllers/film-extra-section-controller.js";
+import FilmsBoardController from "./controllers/film-board-controller.js";
+import FilterController from "./controllers/filter-controller.js";
 
-const FILMS_COUNT = 25;
+const FILMS_COUNT = 10;
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 
 const films = generateFilms(FILMS_COUNT);
+const filmModel = new FilmsModel();
+filmModel.setFilms(films);
 
 //  ---------------------------------------- Заполнение страницы контентом
 
-render(siteHeaderElement, new ProfileComponent(), RenderPosition.BEFOREEND);
+const filterController = new FilterController(siteMainElement, filmModel);
+filterController.render();
+const watchedFilmsCount = filterController.getWatchedFilmsCount();
+
+render(siteHeaderElement, new ProfileComponent(watchedFilmsCount), RenderPosition.BEFOREEND);
+
 render(siteFooterElement, new FooterStatiscticComponent(FILMS_COUNT), RenderPosition.BEFOREEND);
 
-const filmsListController = new FilmsSectionListController(siteMainElement);
-filmsListController.render(films);
-
-const siteFilms = document.querySelector(`.films`);
-
-if (films.length !== 0) {
-  const mostRatingFilms = films.slice().sort((a, b) => b.rating - a.rating);
-  const mostCommentedFilms = films.slice().sort((a, b) => b.commentsNumber - a.commentsNumber);
-
-  const filmsExtraListController = new FilmsExtraSectionListController(siteFilms);
-  filmsExtraListController.render(mostRatingFilms, `Top rated`);
-  filmsExtraListController.render(mostCommentedFilms, `Most commented`);
-}
+const filmsBoardController = new FilmsBoardController(siteMainElement, filmModel);
+filmsBoardController.render(films);
