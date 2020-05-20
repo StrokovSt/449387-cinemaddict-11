@@ -54,6 +54,8 @@ const createStatisticTemplate = () => {
 export default class Statistic extends AbstractSmartComponent {
   constructor() {
     super();
+
+    this._watchedMovies = null;
   }
 
   getTemplate() {
