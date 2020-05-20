@@ -108,6 +108,13 @@ export default class FilmsSectionListController {
     }
   }
 
+  hide() {
+    this._sortComponent.hide();
+    this._mainFilmSection.hide();
+    this._topRatedFilmsExtraSection.hide();
+    this._topCommentedFilmsExtraSection.hide();
+  }
+
   _onDataChange(oldData, newData) {
     const isSuccess = this._filmModel.updateFilm(oldData.id, newData);
 

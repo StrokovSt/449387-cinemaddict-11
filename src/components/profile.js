@@ -1,4 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
+
 import {userRanks} from "../const.js";
 
 const createRank = (watchedFilmsCount) => {

@@ -1,4 +1,5 @@
 import ProfileComponent from "./components/profile.js";
+import MainStatisticComponent from "./components/statistic.js";
 import FooterStatiscticComponent from "./components/footer-statistic.js";
 import FilmsModel from "./models/films.js";
 
@@ -25,8 +26,10 @@ filterController.render();
 const watchedFilmsCount = filterController.getWatchedFilmsCount();
 
 render(siteHeaderElement, new ProfileComponent(watchedFilmsCount), RenderPosition.BEFOREEND);
-
-render(siteFooterElement, new FooterStatiscticComponent(FILMS_COUNT), RenderPosition.BEFOREEND);
+render(siteMainElement, new MainStatisticComponent(), RenderPosition.BEFOREEND);
 
 const filmsBoardController = new FilmsBoardController(siteMainElement, filmModel);
 filmsBoardController.render(films);
+filmsBoardController.hide();
+
+render(siteFooterElement, new FooterStatiscticComponent(FILMS_COUNT), RenderPosition.BEFOREEND);

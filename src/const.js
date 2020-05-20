@@ -1,4 +1,4 @@
-const filmNames = [
+export const filmNames = [
   `Джентельмены`,
   `Однажды в… Голливуде`,
   `Форрест Гамп`,
@@ -21,7 +21,7 @@ const filmNames = [
   `Кролик Джоджо`
 ];
 
-const filmGenres = [
+export const filmGenres = [
   `Action`,
   `Western`,
   `Gangster`,
@@ -41,7 +41,7 @@ const filmGenres = [
   `Horror`
 ];
 
-const filmDescriptions = [
+export const filmDescriptions = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.`,
@@ -53,7 +53,7 @@ const filmDescriptions = [
   `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`
 ];
 
-const ratingList = [
+export const ratingList = [
   `0+`,
   `6+`,
   `12+`,
@@ -61,7 +61,7 @@ const ratingList = [
   `21+`
 ];
 
-const filmDirectors = [
+export const filmDirectors = [
   `Кристофер Нолан`,
   `Александр Роу`,
   `Люк Бессон`,
@@ -84,7 +84,7 @@ const filmDirectors = [
   `Ридли Скотт`
 ];
 
-const filmWriters = [
+export const filmWriters = [
   `Стивен Спилберг`,
   `Квентин Тарантино`,
   `Пол Сэведж`,
@@ -105,7 +105,7 @@ const filmWriters = [
   `Шейн Блэк`
 ];
 
-const filmActors = [
+export const filmActors = [
   `Галь Гадот`,
   `Брэд Питт`,
   `Леонардо Ди Каприо`,
@@ -157,7 +157,7 @@ const filmActors = [
   `Моника Беллуччи`
 ];
 
-const monthNames = [
+export const monthNames = [
   `january`,
   `february`,
   `march`,
@@ -172,7 +172,7 @@ const monthNames = [
   `december`
 ];
 
-const countryNames = [
+export const countryNames = [
   `Австралия`,
   `Австрия`,
   `Бразилия`,
@@ -195,7 +195,7 @@ const countryNames = [
   `США`
 ];
 
-const filmComments = [
+export const filmComments = [
   `Классные декорации, прикольный каст. Фильм огонь!`,
   `Interesting setting and a good cast`,
   `Wow! such garbage...`,
@@ -203,10 +203,13 @@ const filmComments = [
   `Очень старое кино. Очень очень, фу.`,
   `Very very old. Meh`,
   `Almost two hours? Seriously?`,
-  `the best film in the movie history`
+  `the best film in the movie history`,
+  `Meow, is such meow`,
+  `I haven’t seen the movie yet, but I already hate it`,
+  `Hello to my grandma, arigato!`
 ];
 
-const userList = [
+export const userList = [
   `Dog Woof`,
   `Pegas`,
   `Nanin Shenderyn`,
@@ -225,25 +228,30 @@ const userList = [
   `Cat Meowsky`
 ];
 
-const commentEmoji = [
+export const commentEmoji = [
   `angry`,
   `puke`,
   `sleeping`,
   `smile`
 ];
 
-const FilterTypes = {
+export const FilterTypes = {
   ALL: `All movies`,
   WATCHLIST: `Watchlist`,
   HISTORY: `History`,
   FAVORITES: `Favorites`
 };
 
-const userRanks = [
+export const userRanks = [
   `Novice`,
   `Fan`,
   `Movie Buff`
 ];
 
-
-export {filmNames, filmGenres, filmDescriptions, ratingList, filmDirectors, filmWriters, filmActors, monthNames, countryNames, filmComments, userList, commentEmoji, FilterTypes, userRanks};
+export const StatisticFilterTypes = {
+  ALL_TIME: `All time`,
+  TODAY: `Today`,
+  WEEK: `Week`,
+  MONTH: `Month`,
+  YEAR: `Year`
+};
