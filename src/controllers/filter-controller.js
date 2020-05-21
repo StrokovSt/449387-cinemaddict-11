@@ -14,6 +14,7 @@ export default class FilterController {
     this._activeFilterType = FilterTypes.ALL;
     this._filterComponent = null;
     this._watchedFilmsCount = 0;
+    this._isStatsOn = false;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
@@ -35,7 +36,7 @@ export default class FilterController {
 
     this._watchedFilmsCount = getFilmsByFilter(FilterTypes.WATCHLIST, allFilms).length;
     const oldFilterComponent = this._filterComponent;
-    this._filterComponent = new FilterComponent(filters);
+    this._filterComponent = new FilterComponent(filters, this._isStatsOn);
 
     if (oldFilterComponent) {
       replace(this._filterComponent, oldFilterComponent);
@@ -53,11 +54,18 @@ export default class FilterController {
   _onFilterChange(filterType) {
     this._filmModel.setFilter(filterType);
     this._activeFilterType = filterType;
+    this._isStatsOn = false;
     this.render();
   }
 
   getWatchedFilmsCount() {
     return this._watchedFilmsCount;
+  }
+
+  removeActiveClass() {
+    this._activeFilterType = ``;
+    this._isStatsOn = true;
+    this.render();
   }
 
 }

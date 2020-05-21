@@ -9,10 +9,24 @@ const createFilterMarkup = (filter, isChecked) => {
   );
 };
 
-const createStatisticTemplate = () => {
+const createFilmsDuration = (films) => {
+  let filmsDuration = 0;
+  films.forEach((film) => {
+    filmsDuration += film.runtime;
+  });
+  return filmsDuration;
+}
+
+const createStatisticTemplate = (filmModel) => {
   const filtersMarkup = Object.values(StatisticFilterTypes).map((filter, i) => {
     return createFilterMarkup(filter, i === 0);
   }).join(`\n`);
+
+  const watchedFilms = filmModel.getWatchedFilms();
+  const watchedFilmsCount = watchedFilms.length;
+  const watchedFilmsDuration = createFilmsDuration(watchedFilms);
+  const hours = Math.trunc(watchedFilmsDuration / 60);
+  const minutes = watchedFilmsDuration % 60;
 
   return (
     `<section class="statistic">
@@ -30,11 +44,11 @@ const createStatisticTemplate = () => {
       <ul class="statistic__text-list">
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">You watched</h4>
-          <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+          <p class="statistic__item-text">${watchedFilmsCount}<span class="statistic__item-description">movies</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
-          <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+          <p class="statistic__item-text">${hours}<span class="statistic__item-description">h</span>${minutes}<span class="statistic__item-description">m</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
@@ -54,11 +68,30 @@ export default class Statistic extends AbstractSmartComponent {
   constructor(filmModel) {
     super();
 
-    this._watchedMovies = null;
+    this._watchedFilms = null;
     this._filmModel = filmModel;
   }
 
   getTemplate() {
-    return createStatisticTemplate();
+    return createStatisticTemplate(this._filmModel);
+  }
+
+  show() {
+    super.show();
+    this.rerender();
+  }
+
+  recoveryListeners() {
+    this._setActiveFilter();
+  }
+
+  _setActiveFilter() {
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`click`, (evt) => {
+      if (evt.target.tagName !== `INPUT`) {
+        return;
+      }
+      console.log(evt.target.value);
+      this.rerender();
+    });
   }
 }

@@ -1,16 +1,18 @@
 import moment from "moment";
 import AbstractComponent from "./abstract-component.js";
+import {getTimeFromMins} from "../utils/auxiliary-functions.js";
 
 const createFilmCardTemplate = (film) => {
-  const {title, rating, date, duration, genry, img, description, comments, watchlist, alreadyWatched, favorite} = film;
+  const {title, rating, date, runtime, genry, img, description, comments, watchlist, alreadyWatched, favorite} = film;
   const year = moment(date).format(`YYYY`);
+  const filmDuration = getTimeFromMins(runtime);
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${year}</span>
-        <span class="film-card__duration">${duration}</span>
+        <span class="film-card__duration">${filmDuration}</span>
         <span class="film-card__genre">${genry[0]}</span>
       </p>
       <img src="${img}" alt="" class="film-card__poster">

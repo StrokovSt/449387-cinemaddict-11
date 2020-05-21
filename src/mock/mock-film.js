@@ -7,7 +7,7 @@ import {generateComments} from "./mock-comment.js";
 const generateFilm = (item, id) => {
   const filmName = getRandomArrayItem(filmNames);
   const hourDuration = getRandomIntegerNumber(1, 4);
-  const minuteDuration = getRandomIntegerNumber(0, 59);
+  const minuteDuration = getRandomIntegerNumber(90, 210);
 
   const newDate = new Date();
   newDate.setFullYear(getRandomIntegerNumber(1940, 2020), getRandomIntegerNumber(0, 12), getRandomIntegerNumber(0, 31));
@@ -23,7 +23,7 @@ const generateFilm = (item, id) => {
     title: filmName,
     rating: `${getRandomIntegerNumber(0, 10)}.${getRandomIntegerNumber(0, 10)}`,
     date: newDate,
-    duration: `${hourDuration}h ${minuteDuration}m`,
+    runtime: minuteDuration,
     genry: genrys,
     img: `./images/posters/${filmName}.jpg`,
     description: filmDescription,

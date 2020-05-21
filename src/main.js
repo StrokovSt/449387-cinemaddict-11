@@ -26,11 +26,12 @@ const onScreenChangeHandler = (isStatsOn) => {
   if (isStatsOn) {
     mainStatisticComponent.show();
     filmsBoardController.hide();
+    filterController.removeActiveClass();
   } else if (!isStatsOn) {
     filmsBoardController.show();
     mainStatisticComponent.hide();
   }
-}
+};
 
 //  ---------------------------------------- Заполнение страницы контентом
 
@@ -38,12 +39,13 @@ const filmsSectionComponent = new FilmsSectionComponent();
 const mainStatisticComponent = new MainStatisticComponent(filmModel);
 const footerStatiscticComponent = new FooterStatiscticComponent(FILMS_COUNT);
 const filterController = new FilterController(siteMainElement, filmModel, onScreenChangeHandler);
-const watchedFilmsCount = filterController.getWatchedFilmsCount();
 const filmsBoardController = new FilmsBoardController(filmsSectionComponent, filmModel);
-const profileComponent = new ProfileComponent(watchedFilmsCount);
 
 filterController.render();
-render(siteHeaderElement, filmsSectionComponent, RenderPosition.BEFOREEND);
+const watchedFilmsCount = filterController.getWatchedFilmsCount();
+const profileComponent = new ProfileComponent(watchedFilmsCount);
+
+render(siteHeaderElement, profileComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, mainStatisticComponent, RenderPosition.BEFOREEND);
 mainStatisticComponent.hide();

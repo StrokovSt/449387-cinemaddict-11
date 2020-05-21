@@ -4,7 +4,7 @@ import {userRanks} from "../const.js";
 
 const createRank = (watchedFilmsCount) => {
   let userRank = ``;
-  if (watchedFilmsCount <= 10 && watchedFilmsCount > 0) {
+  if (watchedFilmsCount <= 10 && watchedFilmsCount >= 0) {
     userRank = userRanks[0];
   } else
   if (watchedFilmsCount <= 20 && watchedFilmsCount > 11) {

@@ -1,5 +1,6 @@
 import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {getTimeFromMins} from "../utils/auxiliary-functions.js";
 
 const createFilmGenry = (genry) => {
   return (
@@ -13,10 +14,11 @@ const generateGenrys = (genry) => {
 };
 
 const createFilmDetailTemplate = (film) => {
-  const {title, rating, date, duration, genry, img, description, pg, director, writers, actors, country} = film;
+  const {title, rating, date, runtime, genry, img, description, pg, director, writers, actors, country} = film;
 
   const manyGenres = generateGenrys(genry);
   const releaseDate = moment(date).format(`D MMMM YYYY`);
+  const filmDuration = getTimeFromMins(runtime);
 
   return (
     `<section class="film-details">
@@ -59,7 +61,7 @@ const createFilmDetailTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${duration}</td>
+                  <td class="film-details__cell">${filmDuration}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

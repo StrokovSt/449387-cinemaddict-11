@@ -2,13 +2,13 @@
 
 //  --------------------  Создание случайного целого числа
 
-const getRandomIntegerNumber = (min, max) => {
+export const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
 };
 
 //  --------------------  Возвращение случайного элемента массива
 
-const getRandomArrayItem = (array) => {
+export const getRandomArrayItem = (array) => {
   const randomIndex = getRandomIntegerNumber(0, array.length);
 
   return array[randomIndex];
@@ -16,7 +16,7 @@ const getRandomArrayItem = (array) => {
 
 //  --------------------  Создания массива случайных неповторяющихся чисел
 
-const getRandomNumbersArray = (min, max) => {
+export const getRandomNumbersArray = (min, max) => {
   const randomNumberArray = [];
   while (randomNumberArray.length < max) {
     const randomNumber = getRandomIntegerNumber(min, max);
@@ -29,7 +29,7 @@ const getRandomNumbersArray = (min, max) => {
 
 //  --------------------  Перемешивание элементов массива в случайном порядке
 
-const getRandomMixedArray = (array, number) => {
+export const getRandomMixedArray = (array, number) => {
   const mixedArray = [];
   const randomNumbersArray = getRandomNumbersArray(0, number);
   for (let i = 0; i < number; i++) {
@@ -38,4 +38,11 @@ const getRandomMixedArray = (array, number) => {
   return mixedArray;
 };
 
-export {getRandomIntegerNumber, getRandomArrayItem, getRandomNumbersArray, getRandomMixedArray};
+//  --------------------  Перевод минут в формат часы + минуты
+
+export const getTimeFromMins = (mins) => {
+  let hours = Math.trunc(mins / 60);
+	let minutes = mins % 60;
+  const time = hours + `h` + ` ` + minutes + `m`
+	return time;
+};
