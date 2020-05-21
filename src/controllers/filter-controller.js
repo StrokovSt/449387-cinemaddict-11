@@ -6,9 +6,10 @@ import {RenderPosition, render, replace} from "../utils/render.js";
 import {getFilmsByFilter} from "../utils/filter.js";
 
 export default class FilterController {
-  constructor(container, filmModel) {
+  constructor(container, filmModel, onScreenChange) {
     this._container = container;
     this._filmModel = filmModel;
+    this._onScreenChange = onScreenChange;
 
     this._activeFilterType = FilterTypes.ALL;
     this._filterComponent = null;
@@ -42,6 +43,7 @@ export default class FilterController {
     render(container, this._filterComponent, RenderPosition.AFTERBEGIN);
 
     this._filterComponent.setFilterTypeChangeHandler(this._onFilterChange);
+    this._filterComponent.setStatsChangeHandler(this._onScreenChange);
   }
 
   _onDataChange() {

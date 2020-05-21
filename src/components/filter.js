@@ -29,6 +29,7 @@ export default class Filter extends AbstractComponent {
     super();
     this._filters = filters;
     this._currentFilterType = ``;
+    this._isStatsOn = false;
   }
 
   getTemplate() {
@@ -38,12 +39,28 @@ export default class Filter extends AbstractComponent {
   setFilterTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
-      if (evt.target.tagName !== `A`) {
-        return;
+      if (evt.target.tagName === `A`) {
+        const linkHref = evt.target.href.slice().split('#')[1];
+        if (linkHref === `stats`) {
+          return;
+        }
+        const filterType = evt.target.dataset.type;
+        this._currentFilterType = filterType;
+        handler(this._currentFilterType);
       }
-      const filterType = evt.target.dataset.type;
-      this._currentFilterType = filterType;
-      handler(this._currentFilterType);
+    });
+  }
+
+  setStatsChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      if (evt.target.tagName === `A`) {
+        const linkHref = evt.target.href.slice().split('#')[1];
+        if (linkHref === `stats`) {
+          this._isStatsOn = !this._isStatsOn;
+          handler(this._isStatsOn);
+        }
+      }
     });
   }
 }

@@ -255,3 +255,9 @@ export const StatisticFilterTypes = {
   MONTH: `Month`,
   YEAR: `Year`
 };
+
+export const SortTypes = {
+  DEFAULT: `default`,
+  SORT_BY_DATE: `by date`,
+  SORT_BY_RATING: `by rating`
+};

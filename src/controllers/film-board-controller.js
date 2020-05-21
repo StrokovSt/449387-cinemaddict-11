@@ -1,11 +1,11 @@
-import SortComponent, {sortTypes} from "../components/sort.js";
-import FilmsSectionComponent from "../components/films-section.js";
+import SortComponent from "../components/sort.js";
 import MainFilmSectionComponent from "../components/films-list-section.js";
 import ShomMoreButtonComponent from "../components/show-more-button.js";
 import FilmsExtraSectionComponent from "../components/films-extra-section.js";
 
 import FilmCardController from "../controllers/film-card-controller.js";
 
+import {SortTypes} from "../const.js";
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
 const DEFAULT_FILMS_COUNT = 5;
@@ -15,13 +15,13 @@ const getSortedFilms = (films, sortType, from, to) => {
   let sortedFilms = [];
   const choosenFilms = films.slice();
   switch (sortType) {
-    case sortTypes.DEFAULT:
+    case SortTypes.DEFAULT:
       sortedFilms = choosenFilms;
       break;
-    case sortTypes.SORT_BY_DATE:
+    case SortTypes.SORT_BY_DATE:
       sortedFilms = choosenFilms.sort((a, b) => b.date - a.date);
       break;
-    case sortTypes.SORT_BY_RATING:
+    case SortTypes.SORT_BY_RATING:
       sortedFilms = choosenFilms.sort((a, b) => b.rating - a.rating);
       break;
   }
@@ -45,7 +45,6 @@ export default class FilmsSectionListController {
 
     this._showedFilmsControllers = [];
 
-    this._filmsSection = new FilmsSectionComponent();
     this._mainFilmSection = new MainFilmSectionComponent();
     this._topRatedFilmsExtraSection = new FilmsExtraSectionComponent(`Top rated`);
     this._topCommentedFilmsExtraSection = new FilmsExtraSectionComponent(`Top commented`);
@@ -65,12 +64,11 @@ export default class FilmsSectionListController {
   }
 
   render() {
+    const container = this._container.getElement();
     const films = this._filmModel.getFilteredFilms();
     const sortedFilms = getSortedFilms(films, this._sortComponent.getSortType(), 0, this._showingFilmsCount);
 
-    render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
-    render(this._container, this._filmsSection, RenderPosition.BEFOREEND);
-    const filmsSection = document.querySelector(`.films`);
+    render(container, this._sortComponent, RenderPosition.BEFOREEND);
 
     const oldMainFilmSection = this._mainFilmSection;
     this._mainFilmSection = new MainFilmSectionComponent(films.length !== 0);
@@ -78,7 +76,7 @@ export default class FilmsSectionListController {
     if (oldMainFilmSection) {
       replace(this._mainFilmSection, oldMainFilmSection);
     }
-    render(filmsSection, this._mainFilmSection, RenderPosition.BEFOREEND);
+    render(container, this._mainFilmSection, RenderPosition.BEFOREEND);
 
     this._filmListContainer = this._mainFilmSection.getContainerElement();
     this._mainFilmListSection = document.querySelector(`.films-list`);
@@ -92,7 +90,7 @@ export default class FilmsSectionListController {
     const topRatedFilms = this._filmModel.getTopRatedFilms();
 
     if (topRatedFilms.length > 0) {
-      render(filmsSection, this._topRatedFilmsExtraSection, RenderPosition.BEFOREEND);
+      render(container, this._topRatedFilmsExtraSection, RenderPosition.BEFOREEND);
       const newTopRatedFilms = renderFilms(this._topRatedFilmsExtraSection.getContainerElement(), topRatedFilms.slice(0, DEFAULT_EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._onPopupDataChange);
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newTopRatedFilms);
     }
@@ -102,17 +100,20 @@ export default class FilmsSectionListController {
     const topCommentedFilms = this._filmModel.getTopCommentedFilms();
 
     if (topRatedFilms.length > 0) {
-      render(filmsSection, this._topCommentedFilmsExtraSection, RenderPosition.BEFOREEND);
+      render(container, this._topCommentedFilmsExtraSection, RenderPosition.BEFOREEND);
       const newTopCommetnedFilms = renderFilms(this._topCommentedFilmsExtraSection.getContainerElement(), topCommentedFilms.slice(0, DEFAULT_EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._onPopupDataChange);
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newTopCommetnedFilms);
     }
   }
 
   hide() {
-    this._sortComponent.hide();
-    this._mainFilmSection.hide();
-    this._topRatedFilmsExtraSection.hide();
-    this._topCommentedFilmsExtraSection.hide();
+    this._container.hide();
+    this._sortComponent.setSortTypeToDefault();
+    this._onSortTypeChange(SortTypes.DEFAULT);
+  }
+
+  show() {
+    this._container.show();
   }
 
   _onDataChange(oldData, newData) {

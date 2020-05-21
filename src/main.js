@@ -1,3 +1,4 @@
+import FilmsSectionComponent from "./components/films-section.js";
 import ProfileComponent from "./components/profile.js";
 import MainStatisticComponent from "./components/statistic.js";
 import FooterStatiscticComponent from "./components/footer-statistic.js";
@@ -19,17 +20,32 @@ const films = generateFilms(FILMS_COUNT);
 const filmModel = new FilmsModel();
 filmModel.setFilms(films);
 
+//  ---------------------------------------- Логика переключения экранов
+
+const onScreenChangeHandler = (isStatsOn) => {
+  if (isStatsOn) {
+    mainStatisticComponent.show();
+    filmsBoardController.hide();
+  } else if (!isStatsOn) {
+    filmsBoardController.show();
+    mainStatisticComponent.hide();
+  }
+}
+
 //  ---------------------------------------- Заполнение страницы контентом
 
-const filterController = new FilterController(siteMainElement, filmModel);
-filterController.render();
+const filmsSectionComponent = new FilmsSectionComponent();
+const mainStatisticComponent = new MainStatisticComponent(filmModel);
+const footerStatiscticComponent = new FooterStatiscticComponent(FILMS_COUNT);
+const filterController = new FilterController(siteMainElement, filmModel, onScreenChangeHandler);
 const watchedFilmsCount = filterController.getWatchedFilmsCount();
+const filmsBoardController = new FilmsBoardController(filmsSectionComponent, filmModel);
+const profileComponent = new ProfileComponent(watchedFilmsCount);
 
-render(siteHeaderElement, new ProfileComponent(watchedFilmsCount), RenderPosition.BEFOREEND);
-render(siteMainElement, new MainStatisticComponent(), RenderPosition.BEFOREEND);
-
-const filmsBoardController = new FilmsBoardController(siteMainElement, filmModel);
+filterController.render();
+render(siteHeaderElement, filmsSectionComponent, RenderPosition.BEFOREEND);
+render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
+render(siteMainElement, mainStatisticComponent, RenderPosition.BEFOREEND);
+mainStatisticComponent.hide();
 filmsBoardController.render(films);
-filmsBoardController.hide();
-
-render(siteFooterElement, new FooterStatiscticComponent(FILMS_COUNT), RenderPosition.BEFOREEND);
+render(siteFooterElement, footerStatiscticComponent, RenderPosition.BEFOREEND);

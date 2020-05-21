@@ -1,10 +1,6 @@
 import AbstractComponent from './abstract-component.js';
 
-export const sortTypes = {
-  DEFAULT: `default`,
-  SORT_BY_DATE: `by date`,
-  SORT_BY_RATING: `by rating`
-};
+import {SortTypes} from "../const.js";
 
 const createSortOption = (sortType, name, isActive) => {
   return (
@@ -17,9 +13,9 @@ const createSortOption = (sortType, name, isActive) => {
 const createSort = () => {
   return (
     `<ul class='sort'>
-      ${createSortOption(sortTypes.DEFAULT, `Sort by default`, true)}
-      ${createSortOption(sortTypes.SORT_BY_DATE, `Sort by date`, false)}
-      ${createSortOption(sortTypes.SORT_BY_RATING, `Sort by rating`, false)}
+      ${createSortOption(SortTypes.DEFAULT, `Sort by default`, true)}
+      ${createSortOption(SortTypes.SORT_BY_DATE, `Sort by date`, false)}
+      ${createSortOption(SortTypes.SORT_BY_RATING, `Sort by rating`, false)}
     </ul>`
   );
 };
@@ -27,7 +23,7 @@ const createSort = () => {
 export default class Sort extends AbstractComponent {
   constructor() {
     super();
-    this._currentSortType = sortTypes.DEFAULT;
+    this._currentSortType = SortTypes.DEFAULT;
   }
 
   getTemplate() {
@@ -40,7 +36,7 @@ export default class Sort extends AbstractComponent {
 
   setSortTypeToDefault() {
     this.removeActiveClass();
-    this._currentSortType = sortTypes.DEFAULT;
+    this._currentSortType = SortTypes.DEFAULT;
     this.addActiveClass();
   }
 

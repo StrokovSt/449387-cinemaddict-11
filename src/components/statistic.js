@@ -51,10 +51,11 @@ const createStatisticTemplate = () => {
 };
 
 export default class Statistic extends AbstractSmartComponent {
-  constructor() {
+  constructor(filmModel) {
     super();
 
     this._watchedMovies = null;
+    this._filmModel = filmModel;
   }
 
   getTemplate() {
