@@ -1,5 +1,5 @@
+import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
-
 import {StatisticFilterTypes} from "../const.js";
 
 const createFilterMarkup = (filter, isChecked) => {
@@ -34,17 +34,51 @@ const createGenresStatistic = (genres) => {
   return sortedGenres.slice().sort((a, b) => b[1] - a[1]);
 };
 
-const createStatisticTemplate = (filmModel) => {
-  const filtersMarkup = Object.values(StatisticFilterTypes).map((filter, i) => {
-    return createFilterMarkup(filter, i === 0);
+const checkFilmForFilter = (film, currentFilterType) => {
+  const currentDate = new Date();
+  let isFiltered = false;
+  switch (currentFilterType) {
+    case StatisticFilterTypes.ALL_TIME:
+      isFiltered = true;
+      break;
+    case StatisticFilterTypes.TODAY:
+      isFiltered = moment(currentDate).diff(film.watchingDate, `days`) === 0;
+      break;
+    case StatisticFilterTypes.WEEK:
+      isFiltered = moment(currentDate).diff(film.watchingDate, `weeks`) === 0;
+      break;
+    case StatisticFilterTypes.MONTH:
+      isFiltered = moment(currentDate).diff(film.watchingDate, `month`) === 0;
+      break;
+    case StatisticFilterTypes.YEAR:
+      isFiltered = moment(currentDate).diff(film.watchingDate, `year`) === 0;
+      break;
+  }
+  return isFiltered;
+};
+
+const getWatchedFilmsGenres = (watchedFilms) => {
+  let genres = [];
+  watchedFilms.forEach((film) => {
+    genres = genres.concat(film.genry);
+  });
+  return genres;
+};
+
+const createStatisticTemplate = (filmModel, currentFilterType) => {
+  const filtersMarkup = Object.values(StatisticFilterTypes).map((filter) => {
+    return createFilterMarkup(filter, filter === currentFilterType);
   }).join(`\n`);
 
   const watchedFilms = filmModel.getWatchedFilms();
-  const watchedFilmsCount = watchedFilms.length;
-  const watchedFilmsDuration = createFilmsDuration(watchedFilms);
+  const filteredFilms = watchedFilms.filter((film) => checkFilmForFilter(film, currentFilterType));
+
+  const watchedFilmsCount = filteredFilms.length;
+  const watchedFilmsDuration = createFilmsDuration(filteredFilms);
   const hours = Math.trunc(watchedFilmsDuration / 60);
   const minutes = watchedFilmsDuration % 60;
-  const watchedFilmsGenres = filmModel.getWatchedFilmsGenres();
+
+  const watchedFilmsGenres = getWatchedFilmsGenres(filteredFilms);
   const genresStatistic = createGenresStatistic(watchedFilmsGenres);
 
   return (
@@ -89,14 +123,16 @@ export default class Statistic extends AbstractSmartComponent {
 
     this._watchedFilms = null;
     this._filmModel = filmModel;
+    this._currentFilterType = StatisticFilterTypes.ALL_TIME;
   }
 
   getTemplate() {
-    return createStatisticTemplate(this._filmModel);
+    return createStatisticTemplate(this._filmModel, this._currentFilterType);
   }
 
   show() {
     super.show();
+    this._currentFilterType = StatisticFilterTypes.ALL_TIME;
     this.rerender();
   }
 
@@ -109,6 +145,7 @@ export default class Statistic extends AbstractSmartComponent {
       if (evt.target.tagName !== `INPUT`) {
         return;
       }
+      this._currentFilterType = evt.target.value;
       this.rerender();
     });
   }

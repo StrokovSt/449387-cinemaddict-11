@@ -1,7 +1,5 @@
 import FilmCardComponent from "../components/film-card.js";
-
 import PopupController from "../controllers/popup-controller.js";
-
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
 export default class FilmCardController {
@@ -41,15 +39,23 @@ export default class FilmCardController {
     this._filmCardComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this._film, Object.assign({}, this._film, {
-        watchlist: !this._film.watchlist
+        watchlist: !this._film.watchlist,
       }));
     });
 
     this._filmCardComponent.setHistorytButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this._film, Object.assign({}, this._film, {
-        alreadyWatched: !this._film.alreadyWatched
-      }));
+      if (this._film.watchingDate === undefined) {
+        this._onDataChange(this._film, Object.assign({}, this._film, {
+          alreadyWatched: !this._film.alreadyWatched,
+          watchingDate: new Date(),
+        }));
+      } else {
+        this._onDataChange(this._film, Object.assign({}, this._film, {
+          alreadyWatched: !this._film.alreadyWatched,
+          watchingDate: undefined,
+        }));
+      }
     });
 
     this._filmCardComponent.setFavoritesButtonClickHandler((evt) => {

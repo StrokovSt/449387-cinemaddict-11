@@ -12,13 +12,14 @@ const generateFilm = (item, id) => {
   newDate.setFullYear(getRandomIntegerNumber(1940, 2020), getRandomIntegerNumber(0, 12), getRandomIntegerNumber(0, 31));
 
   const newWatchedDate = new Date();
-  newWatchedDate.setFullYear(getRandomIntegerNumber(2019, 2020), getRandomIntegerNumber(0, 12), getRandomIntegerNumber(0, 31));
+  newWatchedDate.setFullYear(getRandomIntegerNumber(2020, 2020), getRandomIntegerNumber(4, 6), getRandomIntegerNumber(0, 31));
 
   const filmDescription = getRandomMixedArray(filmDescriptions, getRandomIntegerNumber(1, 6)).reduce(function (sum, current) {
     return sum + current + ` `;
   });
 
   const genrys = getRandomMixedArray(filmGenres, getRandomIntegerNumber(1, 5));
+  const alreadyWatched = Math.random() > 0.5;
 
   return {
     id,
@@ -45,8 +46,8 @@ const generateFilm = (item, id) => {
     comments: generateComments(getRandomIntegerNumber(1, 10)),
 
     watchlist: Math.random() > 0.5,
-    alreadyWatched: Math.random() > 0.5,
-    watchingDate: newWatchedDate,
+    alreadyWatched,
+    watchingDate: alreadyWatched ? newWatchedDate : undefined,
     favorite: Math.random() > 0.5
   };
 };

@@ -82,9 +82,17 @@ export default class PopupController {
 
     this._popupTypeControlsComponent.setWatchedClickHandler((evt) => {
       evt.preventDefault();
-      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        alreadyWatched: !this._film.alreadyWatched
-      }));
+      if (this._film.watchingDate === undefined) {
+        this._onPopupDataChange(this._film, Object.assign({}, this._film, {
+          alreadyWatched: !this._film.alreadyWatched,
+          watchingDate: new Date(),
+        }));
+      } else {
+        this._onPopupDataChange(this._film, Object.assign({}, this._film, {
+          alreadyWatched: !this._film.alreadyWatched,
+          watchingDate: undefined,
+        }));
+      }
     });
 
     this._popupTypeControlsComponent.setFavoriteClickHandler((evt) => {
