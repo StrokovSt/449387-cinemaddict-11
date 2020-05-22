@@ -6,17 +6,19 @@ import {generateComments} from "./mock-comment.js";
 
 const generateFilm = (item, id) => {
   const filmName = getRandomArrayItem(filmNames);
-  const hourDuration = getRandomIntegerNumber(1, 4);
   const minuteDuration = getRandomIntegerNumber(90, 210);
 
   const newDate = new Date();
   newDate.setFullYear(getRandomIntegerNumber(1940, 2020), getRandomIntegerNumber(0, 12), getRandomIntegerNumber(0, 31));
 
+  const newWatchedDate = new Date();
+  newWatchedDate.setFullYear(getRandomIntegerNumber(2019, 2020), getRandomIntegerNumber(0, 12), getRandomIntegerNumber(0, 31));
+
   const filmDescription = getRandomMixedArray(filmDescriptions, getRandomIntegerNumber(1, 6)).reduce(function (sum, current) {
     return sum + current + ` `;
   });
 
-  const genrys = getRandomMixedArray(filmGenres, getRandomIntegerNumber(1, 4));
+  const genrys = getRandomMixedArray(filmGenres, getRandomIntegerNumber(1, 5));
 
   return {
     id,
@@ -44,6 +46,7 @@ const generateFilm = (item, id) => {
 
     watchlist: Math.random() > 0.5,
     alreadyWatched: Math.random() > 0.5,
+    watchingDate: newWatchedDate,
     favorite: Math.random() > 0.5
   };
 };

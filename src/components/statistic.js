@@ -9,13 +9,30 @@ const createFilterMarkup = (filter, isChecked) => {
   );
 };
 
+// Возвращает суммированное время для всех просмотренных фильмов
+
 const createFilmsDuration = (films) => {
   let filmsDuration = 0;
   films.forEach((film) => {
     filmsDuration += film.runtime;
   });
   return filmsDuration;
-}
+};
+
+// Возвращает массив жанров в порядке их убывания
+
+const createGenresStatistic = (genres) => {
+  let genresStatistic = {};
+  genres.forEach((genre) => {
+    if (genresStatistic[genre] !== undefined) {
+      ++genresStatistic[genre];
+    } else {
+      genresStatistic[genre] = 1;
+    }
+  });
+  const sortedGenres = Object.entries(genresStatistic);
+  return sortedGenres.slice().sort((a, b) => b[1] - a[1]);
+};
 
 const createStatisticTemplate = (filmModel) => {
   const filtersMarkup = Object.values(StatisticFilterTypes).map((filter, i) => {
@@ -27,6 +44,8 @@ const createStatisticTemplate = (filmModel) => {
   const watchedFilmsDuration = createFilmsDuration(watchedFilms);
   const hours = Math.trunc(watchedFilmsDuration / 60);
   const minutes = watchedFilmsDuration % 60;
+  const watchedFilmsGenres = filmModel.getWatchedFilmsGenres();
+  const genresStatistic = createGenresStatistic(watchedFilmsGenres);
 
   return (
     `<section class="statistic">
@@ -52,7 +71,7 @@ const createStatisticTemplate = (filmModel) => {
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">Sci-Fi</p>
+          <p class="statistic__item-text">${genresStatistic.length > 0 ? genresStatistic[0][0] : ``}</p>
         </li>
       </ul>
 
@@ -90,7 +109,6 @@ export default class Statistic extends AbstractSmartComponent {
       if (evt.target.tagName !== `INPUT`) {
         return;
       }
-      console.log(evt.target.value);
       this.rerender();
     });
   }

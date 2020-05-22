@@ -31,7 +31,7 @@ export const getRandomNumbersArray = (min, max) => {
 
 export const getRandomMixedArray = (array, number) => {
   const mixedArray = [];
-  const randomNumbersArray = getRandomNumbersArray(0, number);
+  const randomNumbersArray = getRandomNumbersArray(0, array.length);
   for (let i = 0; i < number; i++) {
     mixedArray[i] = array[randomNumbersArray[i]];
   }
@@ -42,7 +42,7 @@ export const getRandomMixedArray = (array, number) => {
 
 export const getTimeFromMins = (mins) => {
   let hours = Math.trunc(mins / 60);
-	let minutes = mins % 60;
-  const time = hours + `h` + ` ` + minutes + `m`
-	return time;
+  let minutes = mins % 60;
+  const time = hours + `h` + ` ` + minutes + `m`;
+  return time;
 };

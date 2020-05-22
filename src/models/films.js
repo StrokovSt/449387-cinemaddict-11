@@ -18,7 +18,16 @@ export default class Films {
   }
 
   getWatchedFilms() {
-    return this._films.filter((film) => film.watchlist);
+    return this._films.filter((film) => film.alreadyWatched);
+  }
+
+  getWatchedFilmsGenres() {
+    let genres = [];
+    const watchedFilms = this.getWatchedFilms();
+    watchedFilms.forEach((film) => {
+      genres = genres.concat(film.genry);
+    });
+    return genres;
   }
 
   getTopRatedFilms() {
