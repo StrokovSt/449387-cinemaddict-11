@@ -2,15 +2,15 @@ import FilmsSectionComponent from "./components/films-section.js";
 import ProfileComponent from "./components/profile.js";
 import MainStatisticComponent from "./components/statistic.js";
 import FooterStatiscticComponent from "./components/footer-statistic.js";
-import FilmsModel from "./models/films.js";
 
+import FilmsModel from "./models/films.js";
 import {generateFilms} from "./mock/mock-film.js";
 import {RenderPosition, render} from "./utils/render.js";
 
 import FilmsBoardController from "./controllers/film-board-controller.js";
 import FilterController from "./controllers/filter-controller.js";
 
-const FILMS_COUNT = 10;
+const FILMS_COUNT = 45;
 
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);

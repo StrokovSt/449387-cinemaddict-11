@@ -1,6 +1,11 @@
-import moment from "moment";
+import Chart from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {StatisticFilterTypes} from "../const.js";
+import {createFilmsDuration, createGenresStatistic, checkFilmForFilter, getWatchedFilmsGenres} from "../utils/statisctic-functions.js";
+
+const BAR_HEIGHT = 50;
 
 const createFilterMarkup = (filter, isChecked) => {
   return (
@@ -9,77 +14,90 @@ const createFilterMarkup = (filter, isChecked) => {
   );
 };
 
-// Возвращает суммированное время для всех просмотренных фильмов
-
-const createFilmsDuration = (films) => {
-  let filmsDuration = 0;
-  films.forEach((film) => {
-    filmsDuration += film.runtime;
-  });
-  return filmsDuration;
-};
-
-// Возвращает массив жанров в порядке их убывания
-
-const createGenresStatistic = (genres) => {
-  let genresStatistic = {};
-  genres.forEach((genre) => {
-    if (genresStatistic[genre] !== undefined) {
-      ++genresStatistic[genre];
-    } else {
-      genresStatistic[genre] = 1;
+const renderStatisticsChart = (statisticCtx, statisticOfGenres) => {
+  const mostViewedGenres = statisticOfGenres.flat().filter((it) => typeof (it) !== `number`);
+  const mostViewedGenresValues = statisticOfGenres.flat().filter((it) => typeof (it) === `number`);
+  return new Chart(statisticCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: mostViewedGenres.slice(0, 5),
+      datasets: [{
+        data: mostViewedGenresValues.slice(0, 5),
+        backgroundColor: [
+          `rgba(255, 99, 132, 0.7)`,
+          `rgba(54, 162, 235, 0.7)`,
+          `rgba(255, 206, 86, 0.7)`,
+          `rgba(75, 192, 192, 0.7)`,
+          `rgba(153, 102, 255, 0.7)`
+        ],
+        hoverBackgroundColor: [
+          `rgba(255, 99, 132, 0.9)`,
+          `rgba(54, 162, 235, 0.9)`,
+          `rgba(255, 206, 86, 0.9)`,
+          `rgba(75, 192, 192, 0.9)`,
+          `rgba(153, 102, 255, 0.9)`
+        ],
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 20
+          },
+          color: `#ffffff`,
+          anchor: `start`,
+          align: `start`,
+          offset: 40,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#ffffff`,
+            padding: 100,
+            fontSize: 20
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false
+      }
     }
   });
-  const sortedGenres = Object.entries(genresStatistic);
-  return sortedGenres.slice().sort((a, b) => b[1] - a[1]);
 };
 
-const checkFilmForFilter = (film, currentFilterType) => {
-  const currentDate = new Date();
-  let isFiltered = false;
-  switch (currentFilterType) {
-    case StatisticFilterTypes.ALL_TIME:
-      isFiltered = true;
-      break;
-    case StatisticFilterTypes.TODAY:
-      isFiltered = moment(currentDate).diff(film.watchingDate, `days`) === 0;
-      break;
-    case StatisticFilterTypes.WEEK:
-      isFiltered = moment(currentDate).diff(film.watchingDate, `weeks`) === 0;
-      break;
-    case StatisticFilterTypes.MONTH:
-      isFiltered = moment(currentDate).diff(film.watchingDate, `month`) === 0;
-      break;
-    case StatisticFilterTypes.YEAR:
-      isFiltered = moment(currentDate).diff(film.watchingDate, `year`) === 0;
-      break;
-  }
-  return isFiltered;
-};
-
-const getWatchedFilmsGenres = (watchedFilms) => {
-  let genres = [];
-  watchedFilms.forEach((film) => {
-    genres = genres.concat(film.genry);
-  });
-  return genres;
-};
-
-const createStatisticTemplate = (filmModel, currentFilterType) => {
+const createStatisticTemplate = (filteredFilms, statisticOfGenres, currentFilterType) => {
   const filtersMarkup = Object.values(StatisticFilterTypes).map((filter) => {
     return createFilterMarkup(filter, filter === currentFilterType);
   }).join(`\n`);
-
-  const watchedFilms = filmModel.getWatchedFilms();
-  const filteredFilms = watchedFilms.filter((film) => checkFilmForFilter(film, currentFilterType));
 
   const watchedFilmsCount = filteredFilms.length;
   const watchedFilmsDuration = createFilmsDuration(filteredFilms);
   const hours = Math.trunc(watchedFilmsDuration / 60);
   const minutes = watchedFilmsDuration % 60;
 
-  const watchedFilmsGenres = getWatchedFilmsGenres(filteredFilms);
-  const genresStatistic = createGenresStatistic(watchedFilmsGenres);
+  const mostViewedGenresValues = statisticOfGenres.flat().filter((it) => typeof (it) === `number`);
+  const favoriteGenre = (mostViewedGenresValues[0] !== mostViewedGenresValues[1]) ? statisticOfGenres[0][0] : ``;
 
   return (
     `<section class="statistic">
@@ -105,7 +123,7 @@ const createStatisticTemplate = (filmModel, currentFilterType) => {
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
-          <p class="statistic__item-text">${genresStatistic.length > 0 ? genresStatistic[0][0] : ``}</p>
+          <p class="statistic__item-text">${statisticOfGenres.length > 0 ? favoriteGenre : ``}</p>
         </li>
       </ul>
 
@@ -121,23 +139,49 @@ export default class Statistic extends AbstractSmartComponent {
   constructor(filmModel) {
     super();
 
-    this._watchedFilms = null;
     this._filmModel = filmModel;
+    this._filteredFilms = null;
+    this._statisticOfGenres = null;
+
     this._currentFilterType = StatisticFilterTypes.ALL_TIME;
   }
 
   getTemplate() {
-    return createStatisticTemplate(this._filmModel, this._currentFilterType);
+    this._determineVariebles();
+    return createStatisticTemplate(this._filteredFilms, this._statisticOfGenres, this._currentFilterType);
   }
 
   show() {
     super.show();
     this._currentFilterType = StatisticFilterTypes.ALL_TIME;
     this.rerender();
+    this._renderCharts();
   }
 
   recoveryListeners() {
     this._setActiveFilter();
+  }
+
+  _determineVariebles() {
+    const watchedFilms = this._filmModel.getWatchedFilms();
+    this._filteredFilms = watchedFilms.filter((film) => checkFilmForFilter(film, this._currentFilterType));
+
+    const filmGenres = getWatchedFilmsGenres(this._filteredFilms);
+    this._statisticOfGenres = createGenresStatistic(filmGenres);
+  }
+
+  _renderCharts() {
+    const statisticsCtx = this.getElement().querySelector(`.statistic__chart`);
+    statisticsCtx.height = BAR_HEIGHT * this._statisticOfGenres.slice(0, 5).length;
+    this._resetCharts();
+    this._statisticsChart = renderStatisticsChart(statisticsCtx, this._statisticOfGenres);
+  }
+
+  _resetCharts() {
+    if (this._statisticsChart) {
+      this._statisticsChart.destroy();
+      this._statisticsChart = null;
+    }
   }
 
   _setActiveFilter() {
@@ -147,6 +191,7 @@ export default class Statistic extends AbstractSmartComponent {
       }
       this._currentFilterType = evt.target.value;
       this.rerender();
+      this._renderCharts();
     });
   }
 }
