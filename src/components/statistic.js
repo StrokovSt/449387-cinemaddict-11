@@ -4,6 +4,7 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {StatisticFilterTypes} from "../const.js";
 import {createFilmsDuration, createGenresStatistic, checkFilmForFilter, getWatchedFilmsGenres} from "../utils/statisctic-functions.js";
+import {createRank} from "../utils/profile-functions.js";
 
 const BAR_HEIGHT = 50;
 
@@ -98,13 +99,14 @@ const createStatisticTemplate = (filteredFilms, statisticOfGenres, currentFilter
 
   const mostViewedGenresValues = statisticOfGenres.flat().filter((it) => typeof (it) === `number`);
   const favoriteGenre = (mostViewedGenresValues[0] !== mostViewedGenresValues[1]) ? statisticOfGenres[0][0] : ``;
+  const userRank = createRank(watchedFilmsCount);
 
   return (
     `<section class="statistic">
       <p class="statistic__rank">
         Your rank
         <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-        <span class="statistic__rank-label">Sci-Fighter</span>
+        <span class="statistic__rank-label">${userRank}</span>
       </p>
 
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">

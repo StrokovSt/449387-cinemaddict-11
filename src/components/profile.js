@@ -1,20 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
-
-import {userRanks} from "../const.js";
-
-const createRank = (watchedFilmsCount) => {
-  let userRank = ``;
-  if (watchedFilmsCount <= 10 && watchedFilmsCount >= 0) {
-    userRank = userRanks[0];
-  } else
-  if (watchedFilmsCount <= 20 && watchedFilmsCount > 11) {
-    userRank = userRanks[1];
-  } else
-  if (watchedFilmsCount > 21) {
-    userRank = userRanks[2];
-  }
-  return userRank;
-};
+import {createRank} from "../utils/profile-functions.js";
 
 const createProfileTemplate = (watchedFilmsCount) => {
   const userRank = createRank(watchedFilmsCount);
