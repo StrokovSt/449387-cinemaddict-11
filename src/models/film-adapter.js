@@ -26,7 +26,7 @@ export default class Film {
   }
 
   static parseFilms(data) {
-    return data.map(Film.parseCard);
+    return data.map(Film.parseFilm);
   }
 
 }

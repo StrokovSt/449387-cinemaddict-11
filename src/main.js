@@ -22,7 +22,8 @@ const films = generateFilms(FILMS_COUNT);
 const filmModel = new FilmsModel();
 filmModel.setFilms(films);
 
-const api = new API();
+const AUTHORIZATION = `Basic akngdfju2835*BFk`;
+const api = new API(AUTHORIZATION);
 
 api.getFilms()
   .then((films) => {
