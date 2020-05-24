@@ -1,3 +1,5 @@
+import API from "./api.js"
+
 import FilmsSectionComponent from "./components/films-section.js";
 import MainStatisticComponent from "./components/statistic.js";
 import FooterStatiscticComponent from "./components/footer-statistic.js";
@@ -19,6 +21,13 @@ const siteFooterElement = document.querySelector(`.footer`);
 const films = generateFilms(FILMS_COUNT);
 const filmModel = new FilmsModel();
 filmModel.setFilms(films);
+
+const api = new API();
+
+api.getFilms()
+  .then((films) => {
+    console.log(films);
+  });
 
 //  ---------------------------------------- Логика переключения экранов
 
