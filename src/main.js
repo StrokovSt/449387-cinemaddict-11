@@ -18,17 +18,10 @@ const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 
-const films = generateFilms(FILMS_COUNT);
 const filmModel = new FilmsModel();
-filmModel.setFilms(films);
 
-const AUTHORIZATION = `Basic akngdfju2835*BFk`;
+const AUTHORIZATION = `Basic meowbeautikey-dsadfgmdhgkn12l3gh`;
 const api = new API(AUTHORIZATION);
-
-api.getFilms()
-  .then((films) => {
-    console.log(films);
-  });
 
 //  ---------------------------------------- Логика переключения экранов
 
@@ -58,5 +51,12 @@ filterController.render();
 render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, mainStatisticComponent, RenderPosition.BEFOREEND);
 mainStatisticComponent.hide();
-filmsBoardController.render(films);
+
 render(siteFooterElement, footerStatiscticComponent, RenderPosition.BEFOREEND);
+
+api.getFilms()
+  .then((films) => {
+    console.log(films);
+    filmModel.setFilms(films);
+    filmsBoardController.render();
+  });

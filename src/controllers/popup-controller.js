@@ -76,7 +76,7 @@ export default class PopupController {
     this._popupTypeControlsComponent.setWatchlistClickHandler((evt) => {
       evt.preventDefault();
       this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        watchlist: !this._film.watchlist
+        isInWatchlist: !this._film.isInWatchlist
       }));
     });
 
@@ -84,12 +84,12 @@ export default class PopupController {
       evt.preventDefault();
       if (this._film.watchingDate === undefined) {
         this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-          alreadyWatched: !this._film.alreadyWatched,
+          isWatched: !this._film.isWatched,
           watchingDate: new Date(),
         }));
       } else {
         this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-          alreadyWatched: !this._film.alreadyWatched,
+          isWatched: !this._film.isWatched,
           watchingDate: undefined,
         }));
       }
@@ -98,7 +98,7 @@ export default class PopupController {
     this._popupTypeControlsComponent.setFavoriteClickHandler((evt) => {
       evt.preventDefault();
       this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        favorite: !this._film.favorite
+        isFavorite: !this._film.isFavorite
       }));
     });
 

@@ -39,7 +39,7 @@ export default class FilmCardController {
     this._filmCardComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this._film, Object.assign({}, this._film, {
-        watchlist: !this._film.watchlist,
+        isInWatchlist: !this._film.isInWatchlist,
       }));
     });
 
@@ -47,12 +47,12 @@ export default class FilmCardController {
       evt.preventDefault();
       if (this._film.watchingDate === undefined) {
         this._onDataChange(this._film, Object.assign({}, this._film, {
-          alreadyWatched: !this._film.alreadyWatched,
+          isWatched: !this._film.isWatched,
           watchingDate: new Date(),
         }));
       } else {
         this._onDataChange(this._film, Object.assign({}, this._film, {
-          alreadyWatched: !this._film.alreadyWatched,
+          isWatched: !this._film.isWatched,
           watchingDate: undefined,
         }));
       }
@@ -61,7 +61,7 @@ export default class FilmCardController {
     this._filmCardComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this._film, Object.assign({}, this._film, {
-        favorite: !this._film.favorite
+        isFavorite: !this._film.isFavorite
       }));
     });
 

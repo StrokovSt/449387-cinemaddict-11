@@ -6,7 +6,7 @@ import {StatisticFilterTypes} from "../const.js";
 export const getWatchedFilmsGenres = (watchedFilms) => {
   let genres = [];
   watchedFilms.forEach((film) => {
-    genres = genres.concat(film.genry);
+    genres = genres.concat(film.genre);
   });
   return genres;
 };
@@ -16,7 +16,7 @@ export const getWatchedFilmsGenres = (watchedFilms) => {
 export const createFilmsDuration = (films) => {
   let filmsDuration = 0;
   films.forEach((film) => {
-    filmsDuration += film.runtime;
+    filmsDuration += film.duration;
   });
   return filmsDuration;
 };

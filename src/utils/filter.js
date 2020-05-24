@@ -6,15 +6,15 @@ export const getFilmsByFilter = (filterType, films) => {
       return films;
     case FilterTypes.WATCHLIST:
       return films.filter((film) => {
-        return film.watchlist;
+        return film.isInWatchlist;
       });
     case FilterTypes.HISTORY:
       return films.filter((film) => {
-        return film.alreadyWatched;
+        return film.isWatched;
       });
     case FilterTypes.FAVORITES:
       return films.filter((film) => {
-        return film.favorite;
+        return film.isFavorite;
       });
   }
   return films;

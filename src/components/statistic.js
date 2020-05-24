@@ -87,19 +87,19 @@ const renderStatisticsChart = (statisticCtx, statisticOfGenres) => {
   });
 };
 
-const createStatisticTemplate = (filteredFilms, statisticOfGenres, currentFilterType) => {
+const createStatisticTemplate = (watchedFilms, filteredFilms, statisticOfGenres, currentFilterType) => {
   const filtersMarkup = Object.values(StatisticFilterTypes).map((filter) => {
     return createFilterMarkup(filter, filter === currentFilterType);
   }).join(`\n`);
 
-  const watchedFilmsCount = filteredFilms.length;
+  const filteredFilmsCount = filteredFilms.length;
   const watchedFilmsDuration = createFilmsDuration(filteredFilms);
   const hours = Math.trunc(watchedFilmsDuration / 60);
   const minutes = watchedFilmsDuration % 60;
 
   const mostViewedGenresValues = statisticOfGenres.flat().filter((it) => typeof (it) === `number`);
   const favoriteGenre = (mostViewedGenresValues[0] !== mostViewedGenresValues[1]) ? statisticOfGenres[0][0] : ``;
-  const userRank = createRank(watchedFilmsCount);
+  const userRank = createRank(watchedFilms.length);
 
   return (
     `<section class="statistic">
@@ -117,7 +117,7 @@ const createStatisticTemplate = (filteredFilms, statisticOfGenres, currentFilter
       <ul class="statistic__text-list">
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">You watched</h4>
-          <p class="statistic__item-text">${watchedFilmsCount}<span class="statistic__item-description">movies</span></p>
+          <p class="statistic__item-text">${filteredFilmsCount}<span class="statistic__item-description">movies</span></p>
         </li>
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Total duration</h4>
@@ -142,6 +142,7 @@ export default class Statistic extends AbstractSmartComponent {
     super();
 
     this._filmModel = filmModel;
+    this._watchedFilms = null;
     this._filteredFilms = null;
     this._statisticOfGenres = null;
 
@@ -150,7 +151,7 @@ export default class Statistic extends AbstractSmartComponent {
 
   getTemplate() {
     this._determineVariebles();
-    return createStatisticTemplate(this._filteredFilms, this._statisticOfGenres, this._currentFilterType);
+    return createStatisticTemplate(this._watchedFilms, this._filteredFilms, this._statisticOfGenres, this._currentFilterType);
   }
 
   show() {
@@ -165,8 +166,8 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   _determineVariebles() {
-    const watchedFilms = this._filmModel.getWatchedFilms();
-    this._filteredFilms = watchedFilms.filter((film) => checkFilmForFilter(film, this._currentFilterType));
+    this._watchedFilms = this._filmModel.getWatchedFilms();
+    this._filteredFilms = this._watchedFilms.filter((film) => checkFilmForFilter(film, this._currentFilterType));
 
     const filmGenres = getWatchedFilmsGenres(this._filteredFilms);
     this._statisticOfGenres = createGenresStatistic(filmGenres);

@@ -2,23 +2,23 @@ import moment from "moment";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {getTimeFromMins} from "../utils/auxiliary-functions.js";
 
-const createFilmGenry = (genry) => {
+const createFilmgenre = (genre) => {
   return (
-    `<span class="film-details__genre">${genry}</span>`
+    `<span class="film-details__genre">${genre}</span>`
   );
 };
 
-const generateGenrys = (genry) => {
-  const genrysMarkup = genry.map((it) => `${createFilmGenry(it)}`).join(`\n`);
-  return genrysMarkup;
+const generateGenres = (genre) => {
+  const genresMarkup = genre.map((it) => `${createFilmgenre(it)}`).join(`\n`);
+  return genresMarkup;
 };
 
 const createFilmDetailTemplate = (film) => {
-  const {title, rating, date, runtime, genry, img, description, pg, director, writers, actors, country} = film;
+  const {title, rating, releaseDate, duration, genre, poster, description, ageRating, director, writers, actors, country} = film;
 
-  const manyGenres = generateGenrys(genry);
-  const releaseDate = moment(date).format(`D MMMM YYYY`);
-  const filmDuration = getTimeFromMins(runtime);
+  const manyGenres = generateGenres(genre);
+  const filmReleaseDate = moment(releaseDate).format(`D MMMM YYYY`);
+  const filmDuration = getTimeFromMins(duration);
 
   return (
     `<section class="film-details">
@@ -29,8 +29,8 @@ const createFilmDetailTemplate = (film) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="${img}" alt="">
-              <p class="film-details__age">${pg}</p>
+              <img class="film-details__poster-img" src="${poster}" alt="">
+              <p class="film-details__age">${ageRating}</p>
             </div>
             <div class="film-details__info">
               <div class="film-details__info-head">
@@ -57,7 +57,7 @@ const createFilmDetailTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${releaseDate}</td>
+                  <td class="film-details__cell">${filmReleaseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
@@ -67,11 +67,13 @@ const createFilmDetailTemplate = (film) => {
                   <td class="film-details__term">Country</td>
                   <td class="film-details__cell">${country}</td>
                 </tr>
-                <tr class="film-details__row">
-                  <td class="film-details__term">${genry.length > 1 ? `Genres` : `Genre`}</td>
-                  <td class="film-details__cell">
-                    <span class="film-details__genre">${manyGenres}</span>
-                </tr>
+                ${genre.length === 0 ? `` :
+                  `<tr class="film-details__row">
+                    <td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`}</td>
+                    <td class="film-details__cell">
+                      <span class="film-details__genre">${manyGenres}</span>
+                  </tr>`
+                }
               </table>
               <p class="film-details__film-description">
                 ${description}

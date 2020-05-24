@@ -18,37 +18,33 @@ const generateFilm = (item, id) => {
     return sum + current + ` `;
   });
 
-  const genrys = getRandomMixedArray(filmGenres, getRandomIntegerNumber(1, 5));
+  const genres = getRandomMixedArray(filmGenres, getRandomIntegerNumber(1, 5));
   const alreadyWatched = Math.random() > 0.5;
 
   return {
     id,
+    comments: generateComments(getRandomIntegerNumber(1, 10)),
     title: filmName,
+    originalTitle: filmName,
     rating: `${getRandomIntegerNumber(0, 10)}.${getRandomIntegerNumber(0, 10)}`,
-    date: newDate,
-    runtime: minuteDuration,
-    genry: genrys,
-    img: `./images/posters/${filmName}.jpg`,
-    description: filmDescription,
-    commentsNumber: getRandomIntegerNumber(0, 200),
-    pg: getRandomArrayItem(ratingList),
+    poster: `./images/posters/${filmName}.jpg`,
+    ageRating: getRandomArrayItem(ratingList),
     director: getRandomArrayItem(filmDirectors),
-
     writers: getRandomMixedArray(filmWriters, getRandomIntegerNumber(1, 5)).reduce(function (sum, current) {
       return sum + `, ` + current;
     }),
-
     actors: getRandomMixedArray(filmActors, getRandomIntegerNumber(1, 10)).reduce(function (sum, current) {
       return sum + `, ` + current;
     }),
-
+    releaseDate: newDate,
+    duration: minuteDuration,
     country: getRandomArrayItem(countryNames),
-    comments: generateComments(getRandomIntegerNumber(1, 10)),
-
-    watchlist: Math.random() > 0.5,
-    alreadyWatched,
+    genre: genres,
+    description: filmDescription,
+    isInWatchlist: Math.random() > 0.5,
+    isWatched: alreadyWatched,
+    isFavorite: Math.random() > 0.5,
     watchingDate: alreadyWatched ? newWatchedDate : undefined,
-    favorite: Math.random() > 0.5
   };
 };
 

@@ -18,7 +18,7 @@ export default class Films {
   }
 
   getWatchedFilms() {
-    return this._films.filter((film) => film.alreadyWatched);
+    return this._films.filter((film) => film.isWatched);
   }
 
   getWatchedFilmsGenres() {
