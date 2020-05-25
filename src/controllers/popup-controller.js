@@ -20,12 +20,14 @@ const renderComments = (commentContainer, comments, onCommentsDataChange) => {
 };
 
 export default class PopupController {
-  constructor(onDataChange, onViewChange, onPopupDataChange) {
+  constructor(onDataChange, onViewChange, onPopupDataChange, api) {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._onPopupDataChange = onPopupDataChange;
+    this._api = api;
 
     this._film = {};
+    this._comments = [];
     this._popupComponent = null;
     this._popupCommentsComponent = null;
     this._popupTypeControlsComponent = null;
@@ -42,15 +44,13 @@ export default class PopupController {
 
   render(film) {
     this._film = film;
-    this._commentsModel.setComments(this._film.comments);
-    const comments = this._commentsModel.getComments();
 
     const oldPopupComponent = this._popupComponent;
     const oldPopupCommentsComponent = this._popupCommentsComponent;
     const oldPopupTypeControlsComponent = this._popupTypeControlsComponent;
 
+    this._popupCommentsComponent = new PopupCommentsComponent(this._film.comments);
     this._popupTypeControlsComponent = new PopupTypeControlsComponent(this._film);
-    this._popupCommentsComponent = new PopupCommentsComponent(comments);
 
     if (oldPopupComponent) {
       replace(this._popupTypeControlsComponent, oldPopupTypeControlsComponent);
@@ -63,8 +63,16 @@ export default class PopupController {
       render(this._popupComponent.getPopupCommentsContainer(), this._popupCommentsComponent, RenderPosition.BEFOREEND);
     }
 
-    const newComments = renderComments(this._popupCommentsComponent.getPopupCommentsList(), comments, this._onCommentsDataChange);
-    this._showedCommentsControllers = this._showedCommentsControllers.concat(newComments);
+    this._api.getComments(this._film.id)
+      .then((comments) => {
+        console.log(comments);
+        this._commentsModel.setComments(comments);
+      })
+      .then(() => {
+        this._comments = this._commentsModel.getComments();
+        const newComments = renderComments(this._popupCommentsComponent.getPopupCommentsList(), this._comments, this._onCommentsDataChange);
+        this._showedCommentsControllers = this._showedCommentsControllers.concat(newComments);
+      })
 
     //  Обработчики на попап
 
@@ -110,7 +118,7 @@ export default class PopupController {
       }
       this._popupCommentsComponent.setNewCommentEmoji(evt.target.value);
       this._popupCommentsComponent.rerender();
-      renderComments(this._popupCommentsComponent.getPopupCommentsList(), comments, this._onCommentsDataChange);
+      renderComments(this._popupCommentsComponent.getPopupCommentsList(), this._comments, this._onCommentsDataChange);
     });
 
     this._popupCommentsComponent.setTextChangeHandler((evt) => {

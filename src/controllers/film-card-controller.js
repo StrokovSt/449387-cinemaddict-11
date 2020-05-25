@@ -3,11 +3,12 @@ import PopupController from "../controllers/popup-controller.js";
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
 
 export default class FilmCardController {
-  constructor(container, onDataChange, onViewChange, onPopupDataChange) {
+  constructor(container, onDataChange, onViewChange, onPopupDataChange, api) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._onPopupDataChange = onPopupDataChange;
+    this._api = api;
 
     this._film = {};
     this._filmCardComponent = null;
@@ -72,7 +73,7 @@ export default class FilmCardController {
 
   _showPopup() {
     this._onViewChange();
-    this._popupController = new PopupController(this._onDataChange, this._onViewChange, this._onPopupDataChange);
+    this._popupController = new PopupController(this._onDataChange, this._onViewChange, this._onPopupDataChange, this._api);
     this._popupController.render(this._film);
   }
 

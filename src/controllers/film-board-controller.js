@@ -29,9 +29,9 @@ const getSortedFilms = (films, sortType, from, to) => {
   return sortedFilms.slice(from, to);
 };
 
-const renderFilms = (filmListContainer, films, ondataChange, onViewChange, onPopupDataChange) => {
+const renderFilms = (filmListContainer, films, ondataChange, onViewChange, onPopupDataChange, api) => {
   return films.map((film) => {
-    const filmController = new FilmCardController(filmListContainer, ondataChange, onViewChange, onPopupDataChange);
+    const filmController = new FilmCardController(filmListContainer, ondataChange, onViewChange, onPopupDataChange, api);
     filmController.render(film);
 
     return filmController;
@@ -39,9 +39,10 @@ const renderFilms = (filmListContainer, films, ondataChange, onViewChange, onPop
 };
 
 export default class FilmsSectionListController {
-  constructor(container, filmModel) {
+  constructor(container, filmModel, api) {
     this._container = container;
     this._filmModel = filmModel;
+    this._api = api;
 
     this._showedFilmsControllers = [];
 
@@ -81,7 +82,7 @@ export default class FilmsSectionListController {
     this._filmListContainer = this._mainFilmSection.getContainerElement();
     this._mainFilmListSection = document.querySelector(`.films-list`);
 
-    const newFilms = renderFilms(this._filmListContainer, sortedFilms.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange, this._onPopupDataChange);
+    const newFilms = renderFilms(this._filmListContainer, sortedFilms.slice(0, this._showingFilmsCount), this._onDataChange, this._onViewChange, this._onPopupDataChange, this._api);
     this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
     this._renderShowMoreButton();
 
@@ -91,7 +92,7 @@ export default class FilmsSectionListController {
 
     if (topRatedFilms.length > 0) {
       render(container, this._topRatedFilmsExtraSection, RenderPosition.BEFOREEND);
-      const newTopRatedFilms = renderFilms(this._topRatedFilmsExtraSection.getContainerElement(), topRatedFilms.slice(0, DEFAULT_EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._onPopupDataChange);
+      const newTopRatedFilms = renderFilms(this._topRatedFilmsExtraSection.getContainerElement(), topRatedFilms.slice(0, DEFAULT_EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._onPopupDataChange, this._api);
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newTopRatedFilms);
     }
 
@@ -101,7 +102,7 @@ export default class FilmsSectionListController {
 
     if (topRatedFilms.length > 0) {
       render(container, this._topCommentedFilmsExtraSection, RenderPosition.BEFOREEND);
-      const newTopCommetnedFilms = renderFilms(this._topCommentedFilmsExtraSection.getContainerElement(), topCommentedFilms.slice(0, DEFAULT_EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._onPopupDataChange);
+      const newTopCommetnedFilms = renderFilms(this._topCommentedFilmsExtraSection.getContainerElement(), topCommentedFilms.slice(0, DEFAULT_EXTRA_FILMS_COUNT), this._onDataChange, this._onViewChange, this._onPopupDataChange, this._api);
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newTopCommetnedFilms);
     }
   }
@@ -157,7 +158,7 @@ export default class FilmsSectionListController {
       this._showingFilmsCount += DEFAULT_FILMS_COUNT;
 
       const sortedFilms = getSortedFilms(films, this._sortComponent.getSortType(), prevFilmsCount, this._showingFilmsCount);
-      const newFilms = renderFilms(this._filmListContainer, sortedFilms, this._onDataChange, this._onViewChange, this._onPopupDataChange);
+      const newFilms = renderFilms(this._filmListContainer, sortedFilms, this._onDataChange, this._onViewChange, this._onPopupDataChange, this._api);
 
       this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
 
@@ -174,7 +175,7 @@ export default class FilmsSectionListController {
 
     this._filmListContainer.innerHTML = ``;
 
-    const newFilms = renderFilms(this._filmListContainer, sortedFilms, this._onDataChange, this._onViewChange, this._onPopupDataChange);
+    const newFilms = renderFilms(this._filmListContainer, sortedFilms, this._onDataChange, this._onViewChange, this._onPopupDataChange, this._api);
     this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
 
     this._renderShowMoreButton();

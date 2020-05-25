@@ -42,7 +42,7 @@ const filmsSectionComponent = new FilmsSectionComponent();
 const mainStatisticComponent = new MainStatisticComponent(filmModel);
 const footerStatiscticComponent = new FooterStatiscticComponent(FILMS_COUNT);
 const filterController = new FilterController(siteMainElement, filmModel, onScreenChangeHandler);
-const filmsBoardController = new FilmsBoardController(filmsSectionComponent, filmModel);
+const filmsBoardController = new FilmsBoardController(filmsSectionComponent, filmModel, api);
 const profileController = new ProfileController(siteHeaderElement, filmModel);
 
 profileController.render();
