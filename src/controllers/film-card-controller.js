@@ -1,7 +1,10 @@
 import FilmModel from "../models/film-adapter.js";
 import FilmCardComponent from "../components/film-card.js";
+import FilmCardControlsComponent from "../components/film-card-controls.js";
 import PopupController from "../controllers/popup-controller.js";
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export default class FilmCardController {
   constructor(container, onDataChange, onViewChange, onPopupDataChange, api) {
@@ -13,6 +16,7 @@ export default class FilmCardController {
 
     this._film = {};
     this._filmCardComponent = null;
+    this._filmCardControlsComponent = null;
 
     this._popupController = null;
 
@@ -23,44 +27,40 @@ export default class FilmCardController {
     this._film = film;
 
     const oldFilmCardComponent = this._filmCardComponent;
-    this._filmCardComponent = new FilmCardComponent(film);
+    const oldFilmCardControlsComponent = this._filmCardControlsComponent;
+    this._filmCardComponent = new FilmCardComponent(this._film);
+    this._filmCardControlsComponent = new FilmCardControlsComponent(this._film);
 
     //  Если уже существует карточка фильма - перерисовать её
 
     if (oldFilmCardComponent) {
-      replace(this._filmCardComponent, oldFilmCardComponent);
+      replace(this._filmCardControlsComponent, oldFilmCardControlsComponent);
       if (this._popupController) {
         this._popupController.render(this._film);
       }
     } else {
       render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+      render(this._filmCardComponent.getElement(), this._filmCardControlsComponent, RenderPosition.BEFOREEND);
     }
 
     //  Обработчики на карточку фильма
 
-    this._filmCardComponent.setWatchlistButtonClickHandler((evt) => {
+    this._filmCardControlsComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
       const newFilm = FilmModel.clone(this._film);
       newFilm.isInWatchlist = !newFilm.isInWatchlist;
       this._onDataChange(this._film, newFilm);
     });
 
-    this._filmCardComponent.setHistorytButtonClickHandler((evt) => {
+    this._filmCardControlsComponent.setHistorytButtonClickHandler((evt) => {
       evt.preventDefault();
-      if (this._film.watchingDate === undefined) {
-        const newFilm = FilmModel.clone(this._film);
-        newFilm.isWatched = !newFilm.isWatched;
-        newFilm.watchingDate = new Date();
-        this._onDataChange(this._film, newFilm);
-      } else {
-        const newFilm = FilmModel.clone(this._film);
-        newFilm.isWatched = !newFilm.isWatched;
-        newFilm.watchingDate = undefined;
-        this._onDataChange(this._film, newFilm);
-      }
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.isWatched = !newFilm.isWatched;
+      newFilm.watchingDate = new Date();
+      this._onDataChange(this._film, newFilm);
     });
 
-    this._filmCardComponent.setFavoritesButtonClickHandler((evt) => {
+    this._filmCardControlsComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
       const newFilm = FilmModel.clone(this._film);
       newFilm.isFavorite = !newFilm.isFavorite;
@@ -87,6 +87,14 @@ export default class FilmCardController {
     if (this._popupController) {
       this._popupController.remove();
     }
+  }
+
+  shake() {
+    this._filmCardComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._filmCardComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
 }

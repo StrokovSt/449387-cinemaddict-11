@@ -131,19 +131,31 @@ export default class FilmsSectionListController {
       }
     };
 
-    changeFilm();
+    return this._api.updateFilm(oldData.id, newData)
+     .then(() => {
+       changeFilm();
+     })
+     .catch(() => {
+        this._showedFilmsControllers[oldData.id].shake();
+      });
   }
 
   _onPopupDataChange(oldData, newData) {
-    const isSuccess = this._filmModel.updateFilm(oldData.id, newData);
+    const changeFilm = () => {
+      const isSuccess = this._filmModel.updateFilm(oldData.id, newData);
+      if (isSuccess) {
+        this._showedFilmsControllers.forEach((it) => {
+          if (it._film === oldData) {
+            it.render(newData);
+          }
+        });
+      }
+    };
 
-    if (isSuccess) {
-      this._showedFilmsControllers.forEach((it) => {
-        if (it._film === oldData) {
-          it.render(newData);
-        }
-      });
-    }
+    return this._api.updateFilm(oldData.id, newData)
+     .then(() => {
+       changeFilm();
+     });
   }
 
   _renderShowMoreButton() {

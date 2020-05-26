@@ -51,8 +51,6 @@ render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, mainStatisticComponent, RenderPosition.BEFOREEND);
 mainStatisticComponent.hide();
 
-
-
 api.getFilms()
   .then((films) => {
     filmModel.setFilms(films);

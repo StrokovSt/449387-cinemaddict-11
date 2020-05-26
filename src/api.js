@@ -37,7 +37,7 @@ const API = class {
 
   updateFilm(id, data) {
     return this._load({
-      url: `films/${id}`,
+      url: `movies/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({"Content-Type": `application/json`})
@@ -45,6 +45,17 @@ const API = class {
       .then((response) => response.json())
       .then(Film.parseFilm);
   }
+
+  addComment(comment, filmId) {
+   return this._load({
+     url: `comments/${filmId}`,
+     method: Method.POST,
+     body: JSON.stringify(comment.toRAW()),
+     headers: new Headers({"Content-Type": `application/json`})
+   })
+     .then((response) => response.json())
+     .then(Comment.parseComments);
+ }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);

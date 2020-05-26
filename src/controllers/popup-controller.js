@@ -1,3 +1,4 @@
+import FilmModel from "../models/film-adapter.js";
 import PopupComponent from "../components/film-popup.js";
 import PopupTypeControlsComponent from "../components/popop-type-controls.js";
 import PopupCommentsComponent from "../components/popup-comments.js";
@@ -77,37 +78,31 @@ export default class PopupController {
     //  Обработчики на попап
 
     this._popupComponent.setCloseButtonHandler(() => {
-      this._onDataChange(this._film, this._film);
+      const newFilm = FilmModel.clone(this._film);
+      this._onDataChange(this._film, newFilm);
       this._onPopupCloseButtonClick();
     });
 
     this._popupTypeControlsComponent.setWatchlistClickHandler((evt) => {
       evt.preventDefault();
-      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        isInWatchlist: !this._film.isInWatchlist
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.isInWatchlist = !newFilm.isInWatchlist;
+      this._onPopupDataChange(this._film, newFilm);
     });
 
     this._popupTypeControlsComponent.setWatchedClickHandler((evt) => {
       evt.preventDefault();
-      if (this._film.watchingDate === undefined) {
-        this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-          isWatched: !this._film.isWatched,
-          watchingDate: new Date(),
-        }));
-      } else {
-        this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-          isWatched: !this._film.isWatched,
-          watchingDate: undefined,
-        }));
-      }
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.isWatched = !newFilm.isWatched;
+      newFilm.watchingDate = new Date();
+      this._onPopupDataChange(this._film, newFilm);
     });
 
     this._popupTypeControlsComponent.setFavoriteClickHandler((evt) => {
       evt.preventDefault();
-      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        isFavorite: !this._film.isFavorite
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.isFavorite = !newFilm.isFavorite;
+      this._onPopupDataChange(this._film, newFilm);
     });
 
     //  Обработчики на комментарии
@@ -149,7 +144,8 @@ export default class PopupController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
     if (isEscKey) {
       remove(this._popupComponent);
-      this._onDataChange(this._film, this._film);
+      const newFilm = FilmModel.clone(this._film);
+      this._onDataChange(this._film, newFilm);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
