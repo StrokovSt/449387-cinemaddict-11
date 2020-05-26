@@ -67,13 +67,11 @@ const createFilmDetailTemplate = (film) => {
                   <td class="film-details__term">Country</td>
                   <td class="film-details__cell">${country}</td>
                 </tr>
-                ${genre.length === 0 ? `` :
-                  `<tr class="film-details__row">
-                    <td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`}</td>
-                    <td class="film-details__cell">
-                      <span class="film-details__genre">${manyGenres}</span>
-                  </tr>`
-                }
+                ${genre.length === 0 ? `` : `<tr class="film-details__row">
+                                              <td class="film-details__term">${genre.length > 1 ? `Genres` : `Genre`}</td>
+                                              <td class="film-details__cell">
+                                                <span class="film-details__genre">${manyGenres}</span>
+                                            </tr>`}
               </table>
               <p class="film-details__film-description">
                 ${description}

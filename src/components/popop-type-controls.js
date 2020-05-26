@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createTypeControls = (film) => {
   const {isInWatchlist, isWatched, isFavorite} = film;
@@ -14,28 +14,38 @@ const createTypeControls = (film) => {
   );
 };
 
-export default class PopupControls extends AbstractComponent {
+export default class PopupControls extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+
+    this._watchlistClickHandler = null;
+    this._watchedClickHandler = null;
+    this._favoriteClickHandler = null;
   }
 
   getTemplate() {
     return createTypeControls(this._film);
   }
 
+  recoveryListeners() {
+    this.setWatchlistClickHandler(this._watchlistClickHandler);
+    this.setWatchedClickHandler(this._watchedClickHandler);
+    this.setFavoriteClickHandler(this._favoriteClickHandler);
+  }
+
   setWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`)
-    .addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this._watchlistClickHandler = handler;
   }
 
   setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`)
-    .addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this._watchedClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`)
-    .addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this._favoriteClickHandler = handler;
   }
 }

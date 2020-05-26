@@ -118,17 +118,20 @@ export default class FilmsSectionListController {
   }
 
   _onDataChange(oldData, newData) {
-    const isSuccess = this._filmModel.updateFilm(oldData.id, newData);
+    const changeFilm = () => {
+      const isSuccess = this._filmModel.updateFilm(oldData.id, newData);
+      if (isSuccess) {
+        this._showedFilmsControllers.forEach((it) => {
+          // this._removeFilms();
+          // this.render();
+          if (it._film === oldData) {
+            it.render(newData);
+          }
+        });
+      }
+    };
 
-    if (isSuccess) {
-      this._showedFilmsControllers.forEach((it) => {
-        this._removeFilms();
-        this.render();
-        if (it._film === oldData) {
-          it.render(newData);
-        }
-      });
-    }
+    changeFilm();
   }
 
   _onPopupDataChange(oldData, newData) {

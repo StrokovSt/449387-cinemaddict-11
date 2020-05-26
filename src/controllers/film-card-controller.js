@@ -1,3 +1,4 @@
+import FilmModel from "../models/film-adapter.js";
 import FilmCardComponent from "../components/film-card.js";
 import PopupController from "../controllers/popup-controller.js";
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
@@ -39,31 +40,31 @@ export default class FilmCardController {
 
     this._filmCardComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this._film, Object.assign({}, this._film, {
-        isInWatchlist: !this._film.isInWatchlist,
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.isInWatchlist = !newFilm.isInWatchlist;
+      this._onDataChange(this._film, newFilm);
     });
 
     this._filmCardComponent.setHistorytButtonClickHandler((evt) => {
       evt.preventDefault();
       if (this._film.watchingDate === undefined) {
-        this._onDataChange(this._film, Object.assign({}, this._film, {
-          isWatched: !this._film.isWatched,
-          watchingDate: new Date(),
-        }));
+        const newFilm = FilmModel.clone(this._film);
+        newFilm.isWatched = !newFilm.isWatched;
+        newFilm.watchingDate = new Date();
+        this._onDataChange(this._film, newFilm);
       } else {
-        this._onDataChange(this._film, Object.assign({}, this._film, {
-          isWatched: !this._film.isWatched,
-          watchingDate: undefined,
-        }));
+        const newFilm = FilmModel.clone(this._film);
+        newFilm.isWatched = !newFilm.isWatched;
+        newFilm.watchingDate = undefined;
+        this._onDataChange(this._film, newFilm);
       }
     });
 
     this._filmCardComponent.setFavoritesButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this._film, Object.assign({}, this._film, {
-        isFavorite: !this._film.isFavorite
-      }));
+      const newFilm = FilmModel.clone(this._film);
+      newFilm.isFavorite = !newFilm.isFavorite;
+      this._onDataChange(this._film, newFilm);
     });
 
     this._filmCardComponent.setFilmClickHandler(() => {

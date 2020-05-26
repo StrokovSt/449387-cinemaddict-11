@@ -1,11 +1,9 @@
 import PopupComponent from "../components/film-popup.js";
-import PopupCommentsComponent from "../components/popup-comments.js";
 import PopupTypeControlsComponent from "../components/popop-type-controls.js";
-
+import PopupCommentsComponent from "../components/popup-comments.js";
+import PopupUserCommentComponent from "../components/popup-user-comment.js";
 import CommentController from "../controllers/comment-controller.js";
-
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
-
 import CommentsModel from "../models/comments.js";
 
 const siteBodyElement = document.querySelector(`body`);
@@ -28,13 +26,14 @@ export default class PopupController {
 
     this._film = {};
     this._comments = [];
+
     this._popupComponent = null;
-    this._popupCommentsComponent = null;
     this._popupTypeControlsComponent = null;
+    this._popupCommentsComponent = null;
+    this._popupNewUserComponent = null;
     this._commentsModel = new CommentsModel();
 
     this._newText = null;
-
     this._showedCommentsControllers = [];
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -46,7 +45,6 @@ export default class PopupController {
     this._film = film;
 
     const oldPopupComponent = this._popupComponent;
-    const oldPopupCommentsComponent = this._popupCommentsComponent;
     const oldPopupTypeControlsComponent = this._popupTypeControlsComponent;
 
     this._popupCommentsComponent = new PopupCommentsComponent(this._film.comments);
@@ -54,25 +52,27 @@ export default class PopupController {
 
     if (oldPopupComponent) {
       replace(this._popupTypeControlsComponent, oldPopupTypeControlsComponent);
-      replace(this._popupCommentsComponent, oldPopupCommentsComponent);
+      const oldPopupUserCommentComponent = this._popupUserCommentComponent;
+      replace(this._popupUserCommentComponent, oldPopupUserCommentComponent);
     } else {
       this._onViewChange();
       this._popupComponent = new PopupComponent(this._film);
+      this._popupUserCommentComponent = new PopupUserCommentComponent(this._film.comments);
       render(siteBodyElement, this._popupComponent, RenderPosition.BEFOREEND);
       render(this._popupComponent.getPopupControlsContainer(), this._popupTypeControlsComponent, RenderPosition.BEFOREEND);
       render(this._popupComponent.getPopupCommentsContainer(), this._popupCommentsComponent, RenderPosition.BEFOREEND);
+      render(this._popupComponent.getPopupCommentsContainer(), this._popupUserCommentComponent, RenderPosition.BEFOREEND);
     }
 
     this._api.getComments(this._film.id)
       .then((comments) => {
-        console.log(comments);
         this._commentsModel.setComments(comments);
       })
       .then(() => {
         this._comments = this._commentsModel.getComments();
         const newComments = renderComments(this._popupCommentsComponent.getPopupCommentsList(), this._comments, this._onCommentsDataChange);
         this._showedCommentsControllers = this._showedCommentsControllers.concat(newComments);
-      })
+      });
 
     //  Обработчики на попап
 
@@ -112,23 +112,22 @@ export default class PopupController {
 
     //  Обработчики на комментарии
 
-    this._popupCommentsComponent.setEmojiClickHandler((evt) => {
+    this._popupUserCommentComponent.setChangeEmojiClickHandler((evt) => {
       if (evt.target.tagName !== `INPUT`) {
         return;
       }
-      this._popupCommentsComponent.setNewCommentEmoji(evt.target.value);
-      this._popupCommentsComponent.rerender();
-      renderComments(this._popupCommentsComponent.getPopupCommentsList(), this._comments, this._onCommentsDataChange);
+      this._popupUserCommentComponent.setUserCommentEmojiImg(evt.target.value);
+      this._popupUserCommentComponent.rerender();
     });
 
-    this._popupCommentsComponent.setTextChangeHandler((evt) => {
+    this._popupUserCommentComponent.setUserCommentInputChangeHandler((evt) => {
       if (evt.target.tagName !== `TEXTAREA`) {
         return;
       }
-      this._popupCommentsComponent.setNewCommentText(evt.target.value);
+      this._popupUserCommentComponent.setUserCommentText(evt.target.value);
     });
 
-    this._popupCommentsComponent.setSubmitHandler(this._onCommentsDataChange);
+    this._popupUserCommentComponent.setSubmitHandler(this._onCommentsDataChange);
 
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
@@ -136,16 +135,8 @@ export default class PopupController {
   _onCommentsDataChange(id, newComment) {
     if (newComment === null) {
       const isSuccess = this._commentsModel.deleteComment(id);
-      if (isSuccess) {
-        this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-          comments: this._commentsModel.getComments()
-        }));
-      }
     } else if (id === null) {
       this._commentsModel.addComment(newComment);
-      this._onPopupDataChange(this._film, Object.assign({}, this._film, {
-        comments: this._commentsModel.getComments()
-      }));
     }
   }
 

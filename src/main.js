@@ -1,11 +1,10 @@
-import API from "./api.js"
+import API from "./api.js";
 
 import FilmsSectionComponent from "./components/films-section.js";
 import MainStatisticComponent from "./components/statistic.js";
 import FooterStatiscticComponent from "./components/footer-statistic.js";
 
 import FilmsModel from "./models/films.js";
-import {generateFilms} from "./mock/mock-film.js";
 import {RenderPosition, render} from "./utils/render.js";
 
 import FilmsBoardController from "./controllers/film-board-controller.js";
@@ -56,7 +55,6 @@ render(siteFooterElement, footerStatiscticComponent, RenderPosition.BEFOREEND);
 
 api.getFilms()
   .then((films) => {
-    console.log(films);
     filmModel.setFilms(films);
     filmsBoardController.render();
   });
