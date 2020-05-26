@@ -20,7 +20,8 @@ const siteFooterElement = document.querySelector(`.footer`);
 const filmModel = new FilmsModel();
 
 const AUTHORIZATION = `Basic meowbeautikey-dsadfgmdhgkn12l3gh`;
-const api = new API(AUTHORIZATION);
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+const api = new API(END_POINT, AUTHORIZATION);
 
 //  ---------------------------------------- Логика переключения экранов
 
@@ -39,7 +40,6 @@ const onScreenChangeHandler = (isStatsOn) => {
 
 const filmsSectionComponent = new FilmsSectionComponent();
 const mainStatisticComponent = new MainStatisticComponent(filmModel);
-const footerStatiscticComponent = new FooterStatiscticComponent(FILMS_COUNT);
 const filterController = new FilterController(siteMainElement, filmModel, onScreenChangeHandler);
 const filmsBoardController = new FilmsBoardController(filmsSectionComponent, filmModel, api);
 const profileController = new ProfileController(siteHeaderElement, filmModel);
@@ -51,10 +51,12 @@ render(siteMainElement, filmsSectionComponent, RenderPosition.BEFOREEND);
 render(siteMainElement, mainStatisticComponent, RenderPosition.BEFOREEND);
 mainStatisticComponent.hide();
 
-render(siteFooterElement, footerStatiscticComponent, RenderPosition.BEFOREEND);
+
 
 api.getFilms()
   .then((films) => {
     filmModel.setFilms(films);
     filmsBoardController.render();
+    const footerStatiscticComponent = new FooterStatiscticComponent(filmModel.getFilms().length);
+    render(siteFooterElement, footerStatiscticComponent, RenderPosition.BEFOREEND);
   });

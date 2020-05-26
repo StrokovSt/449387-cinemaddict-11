@@ -1,5 +1,9 @@
+import {filmNames} from "../const.js";
+
 export default class Film {
   constructor(data) {
+    const filmName = filmNames[data[`id`]];
+
     this.id = data[`id`];
     this.comments = data[`comments`];
     this.title = data[`film_info`][`title`];
@@ -19,6 +23,10 @@ export default class Film {
     this.isWatched = Boolean(data[`user_details`][`already_watched`]);
     this.isFavorite = Boolean(data[`user_details`][`favorite`]);
     this.watchingDate = data[`user_details`][`watching_date`] ? new Date(data[`user_details`][`watching_date`]) : null;
+
+    // Т.к постеров изначально очень мало немного разноображу, т.к всё равно постеры еще с моков остались
+
+    this.poster = `./images/posters/${filmName}.jpg`;
   }
 
   toRAW() {

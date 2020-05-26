@@ -19,7 +19,7 @@ const getSortedFilms = (films, sortType, from, to) => {
       sortedFilms = choosenFilms;
       break;
     case SortTypes.SORT_BY_DATE:
-      sortedFilms = choosenFilms.sort((a, b) => b.date - a.date);
+      sortedFilms = choosenFilms.sort((a, b) => b.releaseDate - a.releaseDate);
       break;
     case SortTypes.SORT_BY_RATING:
       sortedFilms = choosenFilms.sort((a, b) => b.rating - a.rating);
@@ -121,9 +121,9 @@ export default class FilmsSectionListController {
     const changeFilm = () => {
       const isSuccess = this._filmModel.updateFilm(oldData.id, newData);
       if (isSuccess) {
+        this._removeFilms();
+        this.render();
         this._showedFilmsControllers.forEach((it) => {
-          // this._removeFilms();
-          // this.render();
           if (it._film === oldData) {
             it.render(newData);
           }
