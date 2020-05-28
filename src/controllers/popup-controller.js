@@ -2,6 +2,7 @@ import FilmModel from "../models/film-adapter.js";
 import PopupComponent from "../components/film-popup.js";
 import PopupTypeControlsComponent from "../components/popop-type-controls.js";
 import PopupCommentsComponent from "../components/popup-comments.js";
+import PopupCommentsCountComponent from "../components/popup-comments-count.js";
 import PopupUserCommentComponent from "../components/popup-user-comment.js";
 import CommentController from "../controllers/comment-controller.js";
 import {RenderPosition, render, remove, replace} from "../utils/render.js";
@@ -31,6 +32,7 @@ export default class PopupController {
     this._popupComponent = null;
     this._popupTypeControlsComponent = null;
     this._popupCommentsComponent = null;
+    this._popupCommentsCountComponent = null;
     this._popupNewUserComponent = null;
     this._commentsModel = new CommentsModel();
 
@@ -47,21 +49,25 @@ export default class PopupController {
 
     const oldPopupComponent = this._popupComponent;
     const oldPopupTypeControlsComponent = this._popupTypeControlsComponent;
+    const oldPopupCommentsCountComponent = this._popupCommentsCountComponent;
 
-    this._popupCommentsComponent = new PopupCommentsComponent(this._film.comments);
+    this._popupCommentsComponent = new PopupCommentsComponent();
+    this._popupCommentsCountComponent = new PopupCommentsCountComponent(this._film.comments);
     this._popupTypeControlsComponent = new PopupTypeControlsComponent(this._film);
 
     if (oldPopupComponent) {
       replace(this._popupTypeControlsComponent, oldPopupTypeControlsComponent);
       const oldPopupUserCommentComponent = this._popupUserCommentComponent;
       replace(this._popupUserCommentComponent, oldPopupUserCommentComponent);
+      replace(this._popupCommentsCountComponent, oldPopupCommentsCountComponent);
     } else {
       this._onViewChange();
       this._popupComponent = new PopupComponent(this._film);
-      this._popupUserCommentComponent = new PopupUserCommentComponent(this._film.comments);
+      this._popupUserCommentComponent = new PopupUserCommentComponent(this._commentsModel.getComments());
       render(siteBodyElement, this._popupComponent, RenderPosition.BEFOREEND);
       render(this._popupComponent.getPopupControlsContainer(), this._popupTypeControlsComponent, RenderPosition.BEFOREEND);
       render(this._popupComponent.getPopupCommentsContainer(), this._popupCommentsComponent, RenderPosition.BEFOREEND);
+      render(this._popupCommentsComponent.getPopupCommentsList(), this._popupCommentsCountComponent, RenderPosition.AFTERBEGIN);
       render(this._popupComponent.getPopupCommentsContainer(), this._popupUserCommentComponent, RenderPosition.BEFOREEND);
     }
 
@@ -129,7 +135,32 @@ export default class PopupController {
 
   _onCommentsDataChange(id, newComment) {
     if (newComment === null) {
-      const isSuccess = this._commentsModel.deleteComment(id);
+      const commentController = this._showedCommentsControllers.find((it) => it.getCommentId() === id);
+      commentController.setDeleteButtonData({
+        buttonName: `Deleting...`,
+        isDisabled: true,
+        isShake: false
+      });
+      this._api.deleteComment(id)
+       .then(() => {
+         const isSuccess = this._commentsModel.deleteComment(id);
+         if (isSuccess) {
+           this._popupCommentsCountComponent.rerender(this._commentsModel.getComments());
+           commentController.destroy();
+           const newFilm = FilmModel.clone(this._film);
+           newFilm.comments = this._film.comments.filter((comment) => comment !== id);
+           this._onPopupDataChange(this._film, newFilm);
+           this._showedCommentControllers = this._showedCommentControllers.filter((it) => commentController !== it);
+         }
+       })
+       .catch(() => {
+         commentController.setDeleteButtonData({
+           buttonName: `Delete`,
+           isDisabled: false,
+           isShake: true
+         });
+       });
+
     } else if (id === null) {
       this._commentsModel.addComment(newComment);
     }

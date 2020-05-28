@@ -3,7 +3,7 @@ import AbstractComponent from "./abstract-component.js";
 import {getTimeFromMins} from "../utils/auxiliary-functions.js";
 
 const createFilmCardTemplate = (film) => {
-  const {title, rating, releaseDate, duration, genre, poster, description, comments, isInWatchlist, isWatched, isFavorite} = film;
+  const {title, rating, releaseDate, duration, genre, poster, description, comments} = film;
   const year = moment(releaseDate).format(`YYYY`);
   const filmDuration = getTimeFromMins(duration);
   return (

@@ -21,7 +21,18 @@ export default class CommentController {
     this._commentComponent.setDeleteButtonClickHandler((evt) => {
       evt.preventDefault();
       this._onCommentsDataChange(this._commentId, null);
-      remove(this._commentComponent);
     });
+  }
+
+  getCommentId() {
+    return this._comment.id;
+  }
+
+  setDeleteButtonData(data) {
+    this._commentComponent.setButtonData(data);
+  }
+
+  destroy() {
+    remove(this._commentComponent);
   }
 }

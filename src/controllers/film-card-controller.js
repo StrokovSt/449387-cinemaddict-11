@@ -34,6 +34,7 @@ export default class FilmCardController {
     //  Если уже существует карточка фильма - перерисовать её
 
     if (oldFilmCardComponent) {
+      replace(this._filmCardComponent, oldFilmCardComponent);
       replace(this._filmCardControlsComponent, oldFilmCardControlsComponent);
       if (this._popupController) {
         this._popupController.render(this._film);
@@ -96,5 +97,4 @@ export default class FilmCardController {
       this._filmCardComponent.getElement().style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
   }
-
 }

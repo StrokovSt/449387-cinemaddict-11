@@ -132,10 +132,10 @@ export default class FilmsSectionListController {
     };
 
     return this._api.updateFilm(oldData.id, newData)
-     .then(() => {
-       changeFilm();
-     })
-     .catch(() => {
+      .then(() => {
+        changeFilm();
+      })
+      .catch(() => {
         this._showedFilmsControllers[oldData.id].shake();
       });
   }

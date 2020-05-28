@@ -11,15 +11,13 @@ import FilmsBoardController from "./controllers/film-board-controller.js";
 import FilterController from "./controllers/filter-controller.js";
 import ProfileController from "./controllers/profile-controller.js";
 
-const FILMS_COUNT = 25;
-
 const siteHeaderElement = document.querySelector(`.header`);
 const siteMainElement = document.querySelector(`.main`);
 const siteFooterElement = document.querySelector(`.footer`);
 
 const filmModel = new FilmsModel();
 
-const AUTHORIZATION = `Basic meowbeautikey-dsadfgmdhgkn12l3gh`;
+const AUTHORIZATION = `Basic meowbeautikey-dsadfgmdhgkn12l23gh`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const api = new API(END_POINT, AUTHORIZATION);
 
